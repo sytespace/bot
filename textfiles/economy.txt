@@ -1,0 +1,6 @@
+:moneybag: Economy:
+
+× `s!profile [@user]` - Gets a user's profile, if you don't specify a user it will get your profile
+× `s!pay <@user> <amount>` - Pays another user the specified amount from your balance
+× `s!shop` - Gets all items you can buy using Sytes
+× `s!buy <itemnumber>`- Used in conjunction with shop to purchase items

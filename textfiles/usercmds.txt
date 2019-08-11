@@ -1,0 +1,16 @@
+:tada: New :tada:
+
+× `s!weekly` - Gets the weekly leaderboards
+
+:unlock: User Commands:
+
+× `s!ping` - Gets the bot's latency
+× `s!skin <minecraft username>` - Render a minecraft skin
+× `s!new <Subject>` - Opens a new ticket
+× `s!pfp [@user]` - Gets a user's profile picture, if you don't specify a user it will get your profile picture
+× `s!tos` - Gets the bot's Terms Of Service
+× `s!serverinfo` - Gets some info on the server
+× `s!cat` - Gets a cute cat image
+× `s!dog`- Gets a random dog image (can't ensure cuteness)
+× `s!uptime` - Gets the bot's 
+× `s!genpw` - Genarates a secure password and DM's it to you
