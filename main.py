@@ -207,7 +207,7 @@ async def checkuser(ctx, user: discord.Member = None):
 
 @bot.command()
 @commands.has_permissions(ban_members=True)
-async def ban(ctx, member: discord.Member, *, reason=None):
+async def ban(ctx, member: discord.Member, *, reason='No reason provided.'):
         dm = discord.Embed(title="You have been banned from `SyteSpace`!",
                             description="Details about the ban:", color=0x363942)
         dm.add_field(name=":closed_lock_with_key: Moderator:",
@@ -228,6 +228,7 @@ async def ban(ctx, member: discord.Member, *, reason=None):
         await member.ban(reason=reason)  # Ban
         await log.send(embed=logEmb)  # Send To Log
         await ctx.message.delete()  # Delete The Message
+        await ctx.send('✅ Moderation action completed')
 
 @ban.error
 async def ban_error(ctx, error):
@@ -236,7 +237,7 @@ async def ban_error(ctx, error):
 
 @bot.command()
 @commands.has_permissions(kick_members=True)
-async def kick(ctx, member: discord.Member, *, reason=None):
+async def kick(ctx, member: discord.Member, *, reason='No reason provided.'):
         dm = discord.Embed(
             color=0x363942, title="You have been kicked from `SyteSpace`!")
         dm.set_thumbnail(url=member.avatar_url)
@@ -256,6 +257,7 @@ async def kick(ctx, member: discord.Member, *, reason=None):
         await member.kick(reason=reason)  # Kick
         await log.send(embed=logEmb)  # Send To Log
         await ctx.message.delete()  # Delete The Message
+        await ctx.send('✅ Moderation action completed')
 
 @kick.error
 async def kick_error(ctx, error):
@@ -272,13 +274,26 @@ async def unban(ctx, *, member):
         user = ban_entry.user
 
         if (user.name, user.discriminator) == (member_name, member_discriminator):
+            dm = discord.Embed(
+                color=0x363942, title="You have been unbanned from `SyteSpace`!")
+            dm.add_field(name="Moderator:",
+                        value=ctx.message.author.display_name)
+            logEmb = discord.Embed(
+                color=0x363942, title="An unban has been issued")
+            logEmb.add_field(name="Moderator:",
+                            value=ctx.message.author.display_name)
+            logEmb.add_field(name=":spy: User Unbanned:", value=f"{member.name}")
+            log = bot.get_channel(logChannel)
+            await member.send(embed=dm)  # Send DM
             await ctx.guild.unban(user)
+            await log.send(embed=logEmb)  # Send To Log
+            await ctx.message.delete()  # Delete The Message
             await ctx.send('✅ Moderation action completed')
             return
 
 @bot.command()
 @commands.has_permissions(kick_members=True)
-async def mute(ctx, member: discord.Member = None):
+async def mute(ctx, member: discord.Member = None, *, reason='No reason provided.'):
     role = discord.utils.get(ctx.guild.roles, name="muted")
     unrole = discord.utils.get(ctx.guild.roles, name="guest")
     if not member:
@@ -287,10 +302,13 @@ async def mute(ctx, member: discord.Member = None):
     dm = discord.Embed(
         color=0x363942, title="You have been muted in `SyteSpace`!")
     dm.set_thumbnail(url=member.avatar_url)
+    dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
     dm.add_field(name="Moderator:",
                  value=ctx.message.author.display_name)
     logEmb = discord.Embed(
         color=0x363942, title="A mute has been issued")
+    logEmb.add_field(name=":notepad_spiral: Reason:",
+                     value=f"{reason}")
     logEmb.add_field(name="Moderator:",
                      value=ctx.message.author.display_name)
     logEmb.add_field(name=":spy: User Muted:", value=f"{member.name}")
@@ -310,7 +328,7 @@ async def mute_error(ctx, error):
 
 @bot.command()
 @commands.has_permissions(kick_members=True)
-async def unmute(ctx, member: discord.Member = None):
+async def unmute(ctx, member: discord.Member = None, *, reason='No reason provided.'):
     role = discord.utils.get(ctx.guild.roles, name="muted")
     unrole = discord.utils.get(ctx.guild.roles, name="guest")
     if not member:
@@ -319,10 +337,13 @@ async def unmute(ctx, member: discord.Member = None):
     dm = discord.Embed(
         color=0x363942, title="You have been unmuted in `SyteSpace`!")
     dm.set_thumbnail(url=member.avatar_url)
+    dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
     dm.add_field(name="Moderator:",
                  value=ctx.message.author.display_name)
     logEmb = discord.Embed(
         color=0x363942, title="An unmute has been issued")
+    logEmb.add_field(name=":notepad_spiral: Reason:",
+                     value=f"{reason}")
     logEmb.add_field(name="Moderator:",
                      value=ctx.message.author.display_name)
     logEmb.add_field(name=":spy: User Unmuted:", value=f"{member.name}")
