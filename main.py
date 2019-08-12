@@ -9,6 +9,7 @@ import datetime
 import pyping
 import pyspeedtest
 import secrets
+import json
 
 
 
@@ -69,6 +70,36 @@ async def on_ready():
 
 bot.remove_command('help')
 
+# Events
+
+@bot.event
+async def on_member_join(member):
+    channel = discord.utils.get(member.guild.channels, name='announcements')
+    await channel.send(f'Welcome {member.display_name} To {member.guild.name} Have A Great Time ...')
+    
+    with open('./json/users.json', 'r') as c:
+        usersJson = c
+
+    if not member.id in usersJson:
+        username = str(member.display_name) # get display name
+        userJson[str(member.id)] = {}
+        usersJson[str(member.id)]['username'] = username # use username variable deffined above
+        usersJson[str(member.id)]['bal'] = 0 # default ballence
+        usersJson[str(member.id)]['admin'] = 0 # 0 is Normal / <1 is an admin
+
+    with open('./json/users.json', 'w') as c:
+        json.dump(usersJson, c) # dump data
+
+@bot.event
+async def on_message(message):
+	with open('./json/users.json', 'r') as c:
+		usersJson = c 
+	randomInt = random.randint(5,25) # Get Random Number
+	usersJson[str(member.id)]['bal'] = randomInt
+	with open('./json/users.json', 'w') as c:
+        json.dump(usersJson, c) # dump data
+
+	await bot.process_commands(message) # Run Command 
 
 # Commands
 
