@@ -97,26 +97,41 @@ async def profile(ctx, member: discord.Member = None):
     embed.set_thumbnail(url=member.avatar_url)
     await ctx.say(embed=embed)
 
-# bot.command()
-# async def cat(ctx):
+@bot.command()
+async def cat(ctx):
+    response = requests.get('https://some-random-api.ml/img/cat')
+    data = response.json()
+    embed = discord.Embed(color=0x363942)
+    embed.set_image(url=f"{data['link']}")
+    react = await ctx.send(embed=embed)
+    await react.add_reaction('🐱')
+    while True:
+        repeat = await bot.wait_for('reaction_add')
+    else:
+        await react.remove_reaction(react, '🐱', repeat.user)
+        response = requests.get('https://some-random-api.ml/img/cat')
+        data = response.json()
+        embed = discord.Embed(color=0x363942)
+        embed.set_image(url=f"{data['link']}")
+        await react.edit(react, embed=embed)
 
-#@bot.command()
-#async def dog(ctx):
-#    response = requests.get('https://some-random-api.ml/img/dog')
-#    data = response.json()
-#    embed = discord.Embed(color=0x363942)
-#    embed.set_image(url=f"{data['link']}")
-#    react = await ctx.send(embed=embed)
-#    await react.add_reaction('🐶')
-#    while True:
-#        repeat = await bot.wait_for('reaction_add')
-#    else:
-#        await react.remove_reaction(react, '🐶', repeat.user)
-#        response = requests.get('https://some-random-api.ml/img/dog')
-#        data = response.json()
-#        embed = discord.Embed(color=0x363942)
-#        embed.set_image(url=f"{data['link']}")
-#        await react.edit(react, embed=embed)
+@bot.command()
+async def dog(ctx):
+    response = requests.get('https://some-random-api.ml/img/dog')
+    data = response.json()
+    embed = discord.Embed(color=0x363942)
+    embed.set_image(url=f"{data['link']}")
+    react = await ctx.send(embed=embed)
+    await react.add_reaction('🐶')
+    while True:
+        repeat = await bot.wait_for('reaction_add')
+    else:
+        await react.remove_reaction(react, '🐶', repeat.user)
+        response = requests.get('https://some-random-api.ml/img/dog')
+        data = response.json()
+        embed = discord.Embed(color=0x363942)
+        embed.set_image(url=f"{data['link']}")
+        await react.edit(react, embed=embed)
 
 
 @bot.command()
