@@ -33,7 +33,6 @@ bot.remove_command('help')  # Removes help, it's as simple as that.
 logChannel = 610156083259899904
 TOKEN = open("TOKEN.TXT", "r").read() # Where is the token? Oh well...
 url = open("DATABASE.TXT", "r").read()  # Where is the DB url? Oh well...
-ongoingpurge = False
 
 # Databases
 
@@ -188,25 +187,26 @@ async def pfp(ctx, member: discord.Member):
 
 @bot.command()
 @commands.has_role(610879504994271368)
-async def purge(ctx, number):
-    ongoingpurge = True
-    TextChannel = ctx.message.channel
+async def purge(ctx, amount: int):
     channel = bot.get_channel(610156083259899904)
-    msgs = []
-    number = int(number)
-    async for x in TextChannel.history(ctx.message.channel, limit=number):
-        msgs.append(x)
-    await TextChannel.delete_messages()(msgs)
+    await ctx.channel.purge(limit=amount + 1)
     embed = discord.Embed(title=f"A message purge has occurred!",
                             description="Everything is nice and clean now!", color=0x363942)
     embed.add_field(name=":recycle: Number of messages purged:",
-                    value=f"{number}", inline=False)
+                    value=f"{amount}", inline=False)
     embed.add_field(name=":closed_lock_with_key: Moderator:",
                     value=ctx.message.author.display_name, inline=False)
     embed.set_thumbnail(
         url="https://www.allaboutlean.com/wp-content/uploads/2015/03/Broom-Icon.png")
     # log
     await channel.send(embed=embed)
+
+
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, amount: int):
+    await ctx.channel.purge(limit=amount + 1)
+    await ctx.send(f"{amount} messages got deleted.")
 
 @purge.error
 async def purge_error(ctx, error):
