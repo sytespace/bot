@@ -15,6 +15,7 @@ import secrets
 
 bot = commands.Bot(command_prefix='d!')
 bot.launch_time = datetime.utcnow()
+ongoingpurge = False
 
 
 @bot.event
@@ -191,7 +192,8 @@ async def pfp(ctx, member: discord.Member):
 @bot.command()
 @commands.has_role(610879504994271368)
 async def purge(ctx, amount: int):
-    channel = bot.get_channel(610156083259899904)
+    ongoingpurge = True
+    channel = bot.get_channel(logChannel)
     await ctx.channel.purge(limit=amount)
     embed = discord.Embed(title=f"A message purge has occurred!",
                             description="Everything is nice and clean now!", color=0x363942)
@@ -203,6 +205,7 @@ async def purge(ctx, amount: int):
         url="https://www.allaboutlean.com/wp-content/uploads/2015/03/Broom-Icon.png")
     # log
     await channel.send(embed=embed)
+    ongoingpurge = False
 
 
 @bot.command()
@@ -747,6 +750,79 @@ async def chng_pr():
 
 bot.loop.create_task(chng_pr())
 
+
+@bot.event
+async def on_message_delete(message):
+    try:
+        if message.author == bot.user:
+            pass
+        elif message.content.startswith('s!'):
+            pass
+        elif ongoingpurge == True:
+            pass
+        else:
+            channel = bot.get_channel(logChannel)
+            content = message.content
+            author_name = message.author.display_name
+            embed = discord.Embed(
+                title=f"A message has been deleted!", color=0x363942)
+            embed.add_field(name=":notepad_spiral: Message Content:",
+                            value=f"{content}", inline=False)
+            embed.add_field(name=":spy: Message Sender:",
+                            value=f"{author_name}", inline=False)
+            embed.add_field(name=":tv: Message Channel",
+                            value=f"<#{message.channel.id}>")
+            embed.set_thumbnail(
+                url="http://icons.iconarchive.com/icons/ramotion/custom-mac-os/512/Trash-empty-icon.png")
+            # log
+            await channel.send(embed=embed)
+    except discord.errors.HTTPException:
+        pass
+
+@bot.event
+async def on_message_edit(before, after):
+    channel = bot.get_channel(logChannel)
+    try:
+        before_content = before.content
+        after_content = after.content
+        if before_content == after_content:
+            pass
+        else:
+            embed = discord.Embed(
+                title=f"A message has been edited!", color=0x363942)
+            embed.add_field(name=":notepad_spiral: Before:",
+                            value=f"{before_content}", inline=True)
+            embed.add_field(name=":notepad_spiral: After:",
+                            value=f"{after_content}", inline=True)
+            embed.add_field(name=":spy: Message Sender:",
+                            value=f"{before.author.display_name}", inline=False)
+            embed.add_field(name=":spy: Message Sender ID:",
+                            value=f"{before.author.id}", inline=False)
+            embed.add_field(name=":tv: Message Channel",
+                            value=f"<#{before.channel.id}>")
+            embed.set_thumbnail(
+                url="https://www.freeiconspng.com/uploads/edit-icon-orange-pencil-0.png")
+            # log
+            await channel.send(embed=embed)
+    except discord.errors.HTTPException:
+        pass
+
+
+@bot.event
+async def on_member_remove(member: discord.Member):
+    channel = bot.get_channel(logChannel)
+    sec = discord.Embed(title=f"A user has left!", color=0x363942)
+    sec.add_field(name=":notepad_spiral: User Name:",
+                  value=f"{member.display_name}", inline=True)
+    sec.add_field(name=":space_invader:  User ID:",
+                  value=f"{member.id}", inline=False)
+    sec.add_field(name=":robot: Is Bot", value=f"{member.bot}", inline=False)
+    sec.add_field(name=":clock1: Joined Server at", value=member.joined_at.__format__(
+        '%A, %d. %B %Y @ %H:%M:%S'), inline=False)
+    sec.set_thumbnail(url=member.avatar_url)
+    # log
+    await channel.send(embed=sec)
+
 @bot.command()
 @commands.has_role(610879504994271368)
 async def shutdown(ctx):
@@ -757,5 +833,13 @@ async def shutdown(ctx):
 async def shutdown_error(ctx, error):
     if isinstance(error, commands.MissingRole):
         await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        embed = discord.Embed(
+            title="Welp! Adam must of defined a global variable!", description="That command was not found! We suggest you do `s!help` to see all of the commands", color=0xFF0000)
+        await ctx.send(embed=embed)
+
 
 bot.run(TOKEN)
