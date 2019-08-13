@@ -32,7 +32,7 @@ logChannel = 610156083259899904
 adminRoles = ["605456866775924746", "566249728732561410"]
 TOKEN = open("TOKEN.TXT", "r").read()
 url = open("DATABASE.TXT", "r").read()
-
+ongoingpurge = False
 
 # Databases
 
@@ -106,14 +106,19 @@ async def cat(ctx):
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐱')
     while True:
-        repeat = await bot.wait_for('reaction_add')
-    else:
-        await react.remove_reaction(react, '🐱', repeat.user)
-        response = requests.get('https://some-random-api.ml/img/cat')
-        data = response.json()
-        embed = discord.Embed(color=0x363942)
-        embed.set_image(url=f"{data['link']}")
-        await react.edit(react, embed=embed)
+        emojis = ['🐱']
+        timeout = 120
+        reaction, user = await bot.wait_for('reaction_add')
+        timeout
+        if reaction.message.id == react.id and user.bot is not True:
+            if str(reaction.emoji) in emojis:
+                await reaction.message.remove_reaction('🐱', user)
+                await react.add_reaction('🐱')
+                response = requests.get('https://some-random-api.ml/img/cat')
+                data = response.json()
+                embed = discord.Embed(color=0x363942)
+                embed.set_image(url=f"{data['link']}")
+                await react.edit(embed=embed)
 
 @bot.command()
 async def dog(ctx):
@@ -124,14 +129,19 @@ async def dog(ctx):
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐶')
     while True:
-        repeat = await bot.wait_for('reaction_add')
-    else:
-        await react.remove_reaction(react, '🐶', repeat.user)
-        response = requests.get('https://some-random-api.ml/img/dog')
-        data = response.json()
-        embed = discord.Embed(color=0x363942)
-        embed.set_image(url=f"{data['link']}")
-        await react.edit(react, embed=embed)
+        dogemojis = ['🐶']
+        timeout = 120
+        reaction, user = await bot.wait_for('reaction_add')
+        timeout
+        if reaction.message.id == react.id and user.bot is not True:
+            if str(reaction.emoji) in dogemojis:
+                await reaction.message.remove_reaction('🐶', user)
+                await react.add_reaction('🐶')
+                response = requests.get('https://some-random-api.ml/img/dog')
+                data = response.json()
+                embed = discord.Embed(color=0x363942)
+                embed.set_image(url=f"{data['link']}")
+                await react.edit(embed=embed)
 
 
 @bot.command()
@@ -177,8 +187,30 @@ async def pfp(ctx, member: discord.Member):
     embed.set_image(url=member.avatar_url)
     await ctx.send(embed=embed)
 
-# bot.command()
-# async def purge(ctx, number):
+
+@bot.command()
+async def purge(ctx, number):
+    if [role.id for role in ctx.message.author.roles] in adminRoles:
+        ongoingpurge = True
+        TextChannel = ctx.message.channel
+        channel = bot.get_channel(610156083259899904)
+        msgs = []
+        number = int(number)
+        async for x in TextChannel.history(ctx.message.channel, limit=number):
+            msgs.append(x)
+        await TextChannel.delete_messages()(msgs)
+        embed = discord.Embed(title=f"A message purge has occurred!",
+                              description="Everything is nice and clean now!", color=0x363942)
+        embed.add_field(name=":recycle: Number of messages purged:",
+                        value=f"{number}", inline=False)
+        embed.add_field(name=":closed_lock_with_key: Moderator:",
+                        value=ctx.message.author.display_name, inline=False)
+        embed.set_thumbnail(
+            url="https://www.allaboutlean.com/wp-content/uploads/2015/03/Broom-Icon.png")
+        # log
+        await channel.send(embed=embed)
+    else:
+        await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
 
 @bot.command()
