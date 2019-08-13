@@ -427,24 +427,28 @@ async def unmute_error(ctx, error):
 async def help(ctx):
     embed = discord.Embed(title="What Information Do You Require?",
                           description="React with 💬 for a list of user commands, 💰 for a list of economy commands and 🛑 for a list of moderation commands", color=0x363942)
-    startmsg = await ctx.send(ctx.message.channel, embed=embed)
+    startmsg = await ctx.send(embed=embed)
     await startmsg.add_reaction('💬')
     await startmsg.add_reaction('💰')
     await startmsg.add_reaction('🛑')
     while True:
-        choice = await bot.wait_for(['💬', '💰', '🛑', '🏠', '❌'])
-        if choice.user == bot.user:
-            pass
-        else:
-            if choice.reaction.emoji == '🏠':
-                await startmsg.remove_reaction('🏠', ctx.message.author)
-                await startmsg.remove_reaction('🏠', bot.user)
+        houseemoji = ['🏠']
+        chatemoji = ['💬']
+        moneyemoji = ['💰']
+        blockemoji = ['🛑']
+        xemoji = ['❌']
+        timeout = 120
+        reaction, user = await bot.wait_for('reaction_add')
+        timeout
+        if reaction.message.id == startmsg.id and user.bot is not True:
+            if str(reaction.emoji) in houseemoji:
+                await reaction.message.remove_reaction('🏠', user)
                 embed = discord.Embed(title="What Information Do You Require?",
                                       description="React with 💬 for a list of user commands, 💰 for a list of economy commands and 🛑 for a list of moderation commands", color=0x363942)
-                await ctx.edit(embed=embed)
+                await startmsg.edit(embed=embed)
                 await startmsg.add_reaction('❌')
-            if choice.reaction.emoji == '💬':
-                await startmsg.remove_reaction('💬', choice.user)
+            if str(reaction.emoji) in chatemoji:
+                await reaction.message.remove_reaction('💬', user)
                 await startmsg.add_reaction('🏠')
                 await startmsg.add_reaction('❌')
                 with open("textfiles/usercmds.txt", "r") as txtfile:
@@ -454,11 +458,11 @@ async def help(ctx):
                     embed.add_field(name="\u200b", value=f"{content}")
                     embed.set_footer(
                         text=f"Request by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-                    await ctx.edit(embed=embed)
+                    await startmsg.edit(embed=embed)
                     await startmsg.add_reaction('❌')
                     txtfile.close()
-            if choice.reaction.emoji == '💰':
-                await startmsg.remove_reaction('💰', choice.user)
+            if str(reaction.emoji) in moneyemoji:
+                await reaction.message.remove_reaction('💰', user)
                 await startmsg.add_reaction('🏠')
                 with open("textfiles/economy.txt", "r") as txtfile:
                     content = txtfile.read()
@@ -467,11 +471,11 @@ async def help(ctx):
                     embed.add_field(name="\u200b", value=f"{content}")
                     embed.set_footer(
                         text=f"Request by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-                    await ctx.edit(sembed=embed)
+                    await startmsg.edit(embed=embed)
                     await startmsg.add_reaction('❌')
                     txtfile.close()
-            if choice.reaction.emoji == '🛑':
-                await startmsg.remove_reaction('🛑', choice.user)
+            if str(reaction.emoji) in blockemoji:
+                await reaction.message.remove_reaction('🛑', user)
                 await startmsg.add_reaction('🏠')
                 with open("textfiles/moderation.txt", "r") as txtfile:
                     content = txtfile.read()
@@ -483,10 +487,9 @@ async def help(ctx):
                     await startmsg.edit(embed=embed)
                     await startmsg.add_reaction('❌')
                     txtfile.close()
-            if choice.reaction.emoji == '❌':
-                await startmsg.remove_reaction('❌', choice.user)
-                await ctx.delete(ctx.message)
-                await ctx.delete(startmsg)
+            if str(reaction.emoji) in xemoji:
+                await startmsg.remove_reaction('❌', user)
+                await startmsg.delete()
 
 
 @bot.command()
