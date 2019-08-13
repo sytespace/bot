@@ -189,7 +189,7 @@ async def pfp(ctx, member: discord.Member):
 @commands.has_role(610879504994271368)
 async def purge(ctx, amount: int):
     channel = bot.get_channel(610156083259899904)
-    await ctx.channel.purge(limit=amount + 1)
+    await ctx.channel.purge(limit=amount)
     embed = discord.Embed(title=f"A message purge has occurred!",
                             description="Everything is nice and clean now!", color=0x363942)
     embed.add_field(name=":recycle: Number of messages purged:",
