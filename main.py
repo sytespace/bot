@@ -5,6 +5,7 @@ import requests
 from discord.ext import commands
 from urllib.parse import urlparse
 import psycopg2
+from itertools import cycle
 from datetime import datetime, date, time, timedelta
 #import pyping
 import pyspeedtest
@@ -13,6 +14,7 @@ import secrets
 # Define Bot
 
 bot = commands.Bot(command_prefix='d!')
+bot.launch_time = datetime.utcnow()
 
 
 @bot.event
@@ -29,9 +31,9 @@ bot.remove_command('help')  # Removes help, it's as simple as that.
 # Variables
 
 logChannel = 610156083259899904
-adminRoles = ["605456866775924746", "566249728732561410"]
-TOKEN = open("TOKEN.TXT", "r").read()
-url = open("DATABASE.TXT", "r").read()
+adminRoles = [610155804137357331, 605456866775924746, 566249728732561410]
+TOKEN = open("TOKEN.TXT", "r").read() # Where is the token? Oh well...
+url = open("DATABASE.TXT", "r").read()  # Where is the DB url? Oh well...
 ongoingpurge = False
 
 # Databases
@@ -70,7 +72,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS Tickets(
 
 # Commands
 
-bot.command()
+@bot.command()
 async def profile(ctx, member: discord.Member = None):
     if member is None:
         member = ctx.message.author
@@ -95,7 +97,7 @@ async def profile(ctx, member: discord.Member = None):
         '%A, %d. %B %Y @ %H:%M:%S'))
     embed.set_author(name=f"{member.display_name}'s profile.")
     embed.set_thumbnail(url=member.avatar_url)
-    await ctx.say(embed=embed)
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def cat(ctx):
@@ -163,9 +165,6 @@ async def serverinfo(ctx):
     embed.set_thumbnail(url=server.icon_url)
     await ctx.send(embed=embed)
 
-# bot.command()
-# async def weekly_reset(ctx):
-
 
 @bot.command()
 async def uptime(ctx):
@@ -174,7 +173,7 @@ async def uptime(ctx):
     minutes, seconds = divmod(remainder, 60)
     days, hours = divmod(hours, 24)
     weeks, days = divmod(days, 7)
-    embed = discord.Embed(color=0xA121FF)
+    embed = discord.Embed(color=0x363942)
     embed.add_field(name="Our bot's uptime :calendar_spiral:",
                     value=f"Weeks: **{weeks}**\nDays: **{days}**\nHours: **{hours}**\nMinutes: **{minutes}**\nSeconds: **{seconds}**")
     await ctx.send(embed=embed)
@@ -253,8 +252,8 @@ async def checkuser(ctx, user: discord.Member = None):
 # async def buy(ctx):
 
 @bot.command()
-@commands.has_permissions(ban_members=True)
 async def ban(ctx, member: discord.Member, *, reason='No reason provided.'):
+    if [role.id for role in ctx.message.author.roles] in adminRoles:
         dm = discord.Embed(title="You have been banned from `SyteSpace`!",
                             description="Details about the ban:", color=0x363942)
         dm.add_field(name=":closed_lock_with_key: Moderator:",
@@ -276,15 +275,12 @@ async def ban(ctx, member: discord.Member, *, reason='No reason provided.'):
         await log.send(embed=logEmb)  # Send To Log
         await ctx.message.delete()  # Delete The Message
         await ctx.send('✅ Moderation action completed')
-
-@ban.error
-async def ban_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
+    else:
         await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
 @bot.command()
-@commands.has_permissions(kick_members=True)
 async def kick(ctx, member: discord.Member, *, reason='No reason provided.'):
+    if [role.id for role in ctx.message.author.roles] in adminRoles:
         dm = discord.Embed(
             color=0x363942, title="You have been kicked from `SyteSpace`!")
         dm.set_thumbnail(url=member.avatar_url)
@@ -305,109 +301,102 @@ async def kick(ctx, member: discord.Member, *, reason='No reason provided.'):
         await log.send(embed=logEmb)  # Send To Log
         await ctx.message.delete()  # Delete The Message
         await ctx.send('✅ Moderation action completed')
-
-@kick.error
-async def kick_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
+    else:
         await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
 @bot.command()
-@commands.has_permissions(ban_members=True)
 async def unban(ctx, *, member):
-    banned_users = await ctx.guild.bans()
-    member_name, member_discriminator = member.split('#')
+    if [role.id for role in ctx.message.author.roles] in adminRoles:
+        banned_users = await ctx.guild.bans()
+        member_name, member_discriminator = member.split('#')
 
-    for ban_entry in banned_users:
-        user = ban_entry.user
+        for ban_entry in banned_users:
+            user = ban_entry.user
 
-        if (user.name, user.discriminator) == (member_name, member_discriminator):
-            dm = discord.Embed(
-                color=0x363942, title="You have been unbanned from `SyteSpace`!")
-            dm.add_field(name="Moderator:",
-                        value=ctx.message.author.display_name)
-            logEmb = discord.Embed(
-                color=0x363942, title="An unban has been issued")
-            logEmb.add_field(name="Moderator:",
+            if (user.name, user.discriminator) == (member_name, member_discriminator):
+                dm = discord.Embed(
+                    color=0x363942, title="You have been unbanned from `SyteSpace`!")
+                dm.add_field(name="Moderator:",
                             value=ctx.message.author.display_name)
-            logEmb.add_field(name=":spy: User Unbanned:", value=f"{member.name}")
-            log = bot.get_channel(logChannel)
-            await member.send(embed=dm)  # Send DM
-            await ctx.guild.unban(user)
-            await log.send(embed=logEmb)  # Send To Log
-            await ctx.message.delete()  # Delete The Message
-            await ctx.send('✅ Moderation action completed')
-            return
+                logEmb = discord.Embed(
+                    color=0x363942, title="An unban has been issued")
+                logEmb.add_field(name="Moderator:",
+                                value=ctx.message.author.display_name)
+                logEmb.add_field(name=":spy: User Unbanned:", value=f"{member.name}")
+                log = bot.get_channel(logChannel)
+                await member.send(embed=dm)  # Send DM
+                await ctx.guild.unban(user)
+                await log.send(embed=logEmb)  # Send To Log
+                await ctx.message.delete()  # Delete The Message
+                await ctx.send('✅ Moderation action completed')
+                return
+    else:
+        await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
 @bot.command()
-@commands.has_permissions(kick_members=True)
 async def mute(ctx, member: discord.Member = None, *, reason='No reason provided.'):
-    role = discord.utils.get(ctx.guild.roles, name="muted")
-    unrole = discord.utils.get(ctx.guild.roles, name="guest")
-    if not member:
-        await ctx.send("Please specify a member.")
-        return
-    dm = discord.Embed(
-        color=0x363942, title="You have been muted in `SyteSpace`!")
-    dm.set_thumbnail(url=member.avatar_url)
-    dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
-    dm.add_field(name="Moderator:",
-                 value=ctx.message.author.display_name)
-    logEmb = discord.Embed(
-        color=0x363942, title="A mute has been issued")
-    logEmb.add_field(name=":notepad_spiral: Reason:",
-                     value=f"{reason}")
-    logEmb.add_field(name="Moderator:",
-                     value=ctx.message.author.display_name)
-    logEmb.add_field(name=":spy: User Muted:", value=f"{member.name}")
-    logEmb.set_thumbnail(url=member.avatar_url)
-    log = bot.get_channel(logChannel)
-    await member.send(embed=dm)  # Send DM
-    await member.add_roles(role)
-    await member.remove_roles(unrole)
-    await log.send(embed=logEmb)  # Send To Log
-    await ctx.message.delete()  # Delete The Message
-    await ctx.send("✅ Moderation action completed")
-
-@mute.error
-async def mute_error(ctx, error):
-    if isinstance(error, commands.CheckFailure):
+    if [role.id for role in ctx.message.author.roles] in adminRoles:
+        role = discord.utils.get(ctx.guild.roles, name="muted")
+        unrole = discord.utils.get(ctx.guild.roles, name="guest")
+        if not member:
+            await ctx.send("Please specify a member.")
+            return
+        dm = discord.Embed(
+            color=0x363942, title="You have been muted in `SyteSpace`!")
+        dm.set_thumbnail(url=member.avatar_url)
+        dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
+        dm.add_field(name="Moderator:",
+                    value=ctx.message.author.display_name)
+        logEmb = discord.Embed(
+            color=0x363942, title="A mute has been issued")
+        logEmb.add_field(name=":notepad_spiral: Reason:",
+                        value=f"{reason}")
+        logEmb.add_field(name="Moderator:",
+                        value=ctx.message.author.display_name)
+        logEmb.add_field(name=":spy: User Muted:", value=f"{member.name}")
+        logEmb.set_thumbnail(url=member.avatar_url)
+        log = bot.get_channel(logChannel)
+        await member.send(embed=dm)  # Send DM
+        await member.add_roles(role)
+        await member.remove_roles(unrole)
+        await log.send(embed=logEmb)  # Send To Log
+        await ctx.message.delete()  # Delete The Message
+        await ctx.send("✅ Moderation action completed")
+    else:
         await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
 @bot.command()
-@commands.has_permissions(kick_members=True)
 async def unmute(ctx, member: discord.Member = None, *, reason='No reason provided.'):
-    role = discord.utils.get(ctx.guild.roles, name="muted")
-    unrole = discord.utils.get(ctx.guild.roles, name="guest")
-    if not member:
-        await ctx.send("Please specify a member.")
-        return
-    dm = discord.Embed(
-        color=0x363942, title="You have been unmuted in `SyteSpace`!")
-    dm.set_thumbnail(url=member.avatar_url)
-    dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
-    dm.add_field(name="Moderator:",
-                 value=ctx.message.author.display_name)
-    logEmb = discord.Embed(
-        color=0x363942, title="An unmute has been issued")
-    logEmb.add_field(name=":notepad_spiral: Reason:",
-                     value=f"{reason}")
-    logEmb.add_field(name="Moderator:",
-                     value=ctx.message.author.display_name)
-    logEmb.add_field(name=":spy: User Unmuted:", value=f"{member.name}")
-    logEmb.set_thumbnail(url=member.avatar_url)
-    log = bot.get_channel(logChannel)
-    await member.send(embed=dm)  # Send DM
-    await member.remove_roles(role)
-    await member.add_roles(unrole)
-    await log.send(embed=logEmb)  # Send To Log
-    await ctx.message.delete()  # Delete The Message
-    await ctx.send("✅ Moderation action completed")
-
-
-@unmute.error
-async def unmute_error(ctx, error):
-    if isinstance(error, commands.CheckFailure):
+    if [role.id for role in ctx.message.author.roles] in adminRoles:
+        role = discord.utils.get(ctx.guild.roles, name="muted")
+        unrole = discord.utils.get(ctx.guild.roles, name="guest")
+        if not member:
+            await ctx.send("Please specify a member.")
+            return
+        dm = discord.Embed(
+            color=0x363942, title="You have been unmuted in `SyteSpace`!")
+        dm.set_thumbnail(url=member.avatar_url)
+        dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
+        dm.add_field(name="Moderator:",
+                    value=ctx.message.author.display_name)
+        logEmb = discord.Embed(
+            color=0x363942, title="An unmute has been issued")
+        logEmb.add_field(name=":notepad_spiral: Reason:",
+                        value=f"{reason}")
+        logEmb.add_field(name="Moderator:",
+                        value=ctx.message.author.display_name)
+        logEmb.add_field(name=":spy: User Unmuted:", value=f"{member.name}")
+        logEmb.set_thumbnail(url=member.avatar_url)
+        log = bot.get_channel(logChannel)
+        await member.send(embed=dm)  # Send DM
+        await member.remove_roles(role)
+        await member.add_roles(unrole)
+        await log.send(embed=logEmb)  # Send To Log
+        await ctx.message.delete()  # Delete The Message
+        await ctx.send("✅ Moderation action completed")
+    else:
         await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
+
 
 @bot.command()
 async def help(ctx):
@@ -705,11 +694,27 @@ def isrisk(creation_date):
     else:
         return False
 
+async def chng_pr():
+    await bot.wait_until_ready()
+
+    statuses = ["s!help", "with the fate of the world", "with hosting", "Minecraft", f"with {len(list(bot.get_all_members()))} users"]
+    statuses = cycle(statuses)
+
+    while not bot.is_closed():
+        status = next(statuses)
+
+        await bot.change_presence(activity=discord.Game(status), status='idle')
+
+        await asyncio.sleep(15)
+
+bot.loop.create_task(chng_pr())
 
 @bot.command()
-@commands.has_permissions(administrator=True)
 async def shutdown(ctx):
-    await ctx.send("Shutted Down.")
-    await ctx.bot.logout()
+    if [role.id for role in ctx.message.author.roles] in adminRoles:
+        await ctx.send("I have logged out.")
+        await ctx.bot.logout()
+    else:
+        await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
 bot.run(TOKEN)
