@@ -251,8 +251,11 @@ async def checkuser_error(ctx, error):
     if isinstance(error, commands.MissingRole):
         await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
-# bot.command()
-# async def genpw(ctx):
+
+@bot.command(pass_context=True)
+async def genpw(ctx):
+    pw = secrets.token_urlsafe(5)
+    await ctx.author.send(ctx.message.author, f"Your generated password is `{pw}`, this password is secure and hasn't been shared with anybody else")
 
 # bot.command()
 # async def shop(ctx):
