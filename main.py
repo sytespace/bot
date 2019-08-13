@@ -216,32 +216,35 @@ async def purge_error(ctx, error):
 
 @bot.command()
 @commands.has_role(610879504994271368)
-async def checkuser(ctx, user: discord.Member = None):
-    if user is None:
-        user = ctx.message.author
-    accage = datetime.utcnow() - user.created_at
-    postaccage = int(accage.days)
-    embed = discord.Embed(color=0x363942)
-    embed.set_author(name=user.display_name)
-    embed.add_field(name=":desktop: ID:", value=user.id, inline=False)
-    embed.add_field(name=":satellite: Status:",
-                    value=user.status, inline=False)
-    embed.add_field(name=":star2: Joined server::", value=user.joined_at.__format__(
-        '%A, %d. %B %Y @ %H:%M:%S'), inline=False)
-    embed.add_field(name=":date: Created account:", value=user.created_at.__format__(
-        '%A, %d. %B %Y @ %H:%M:%S'), inline=False)
-    embed.add_field(name=":bust_in_silhouette: Nickname:",
-                    value=user.display_name, inline=False)
-    embed.add_field(name=":robot: Is Bot:", value=user.bot, inline=False)
-    embed.add_field(name=':ballot_box_with_check: Top role:',
-                    value=user.top_role.name, inline=False)
-    embed.add_field(name=':video_game: Playing:',
-                    value=user.game, inline=False)
-    embed.add_field(name=':video_game: Account Age:',
-                    value=f"{postaccage} Days", inline=False)
-    embed.set_thumbnail(url=user.avatar_url)
-    await ctx.send(embed=embed)
+async def checkuser(ctx, member : discord.Member = None):
+    member = ctx.author if not member else member
 
+    roles = [role for role in member.roles]
+
+    embed = discord.Embed(colour=0x363942,
+                          timestamp=ctx.message.created_at)
+
+    embed.set_author(name=f"User Info - {member}")
+    embed.set_thumbnail(url=member.avatar_url)
+    
+    embed.add_field(name=":desktop: ID:", value=member.id, inline=False)
+
+    embed.add_field(name=":star2: Joined at:", value=member.joined_at.strftime(
+        "%a, %#d %B %Y, %I:%M %p UTC"))
+
+    embed.add_field(name=":date: Created at:", value=member.created_at.strftime(
+        "%a, %#d %B %Y, %I:%M %p UTC"))
+
+    embed.add_field(name=":bust_in_silhouette: Nickname:",
+                    value=member.display_name, inline=False)
+    
+    embed.add_field(name=":robot: Is Bot:", value=member.bot)
+
+    embed.add_field(name="Roles:", value=" ".join(
+        [role.mention for role in roles]))
+    embed.add_field(name="Top role:", value=member.top_role.mention)
+
+    await ctx.send(embed=embed)
 
 @checkuser.error
 async def checkuser_error(ctx, error):
@@ -326,21 +329,21 @@ async def unban(ctx, *, member):
         user = ban_entry.user
 
         if (user.name, user.discriminator) == (member_name, member_discriminator):
-            dm = discord.Embed(
-                color=0x363942, title="You have been unbanned from `SyteSpace`!")
-            dm.add_field(name="Moderator:",
-                        value=ctx.message.author.display_name)
-            logEmb = discord.Embed(
-                color=0x363942, title="An unban has been issued")
-            logEmb.add_field(name="Moderator:",
-                            value=ctx.message.author.display_name)
-            logEmb.add_field(name=":spy: User Unbanned:", value=f"{member.name}")
-            log = bot.get_channel(logChannel)
-            await member.send(embed=dm)  # Send DM
             await ctx.guild.unban(user)
-            await log.send(embed=logEmb)  # Send To Log
-            await ctx.message.delete()  # Delete The Message
+            #dm = discord.Embed(
+                #color=0x363942, title="You have been unbanned from `SyteSpace`!")
+            #dm.add_field(name="Moderator:",
+                        #value=ctx.message.author.display_name)
+            #logEmb = discord.Embed(
+                #color=0x363942, title="An unban has been issued")
+            #logEmb.add_field(name="Moderator:",
+                            #value=ctx.message.author.display_name)
+            #logEmb.add_field(name=":spy: User Unbanned:", value=f"{member.name}")
+            #log = bot.get_channel(logChannel)
             await ctx.send('✅ Moderation action completed')
+            #await member.send(embed=dm)  # Send DM
+            #await log.send(embed=logEmb)  # Send To Log
+            #await ctx.message.delete()  # Delete The Message
             return
 
 @unban.error
