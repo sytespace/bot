@@ -184,9 +184,9 @@ async def uptime(ctx):
 @bot.command()
 @commands.has_role(610879504994271368)
 async def statmod(ctx, member: discord.Member = None, amount: int = None):
-    if member = None:
+    if member == None:
         await ctx.send(":x: Please specify a member")
-    if amount = None:
+    if amount == None:
         await ctx.send(":x: Please specify an amount")
     else:
         embed = discord.Embed(title=f"What aspect of {ctx.author.display_name}'s stats do you wish to change?'", description="React with 📕 to change XP and 📙 to change Sytes and 📗 to toggle booster", color=0x363942)
