@@ -117,7 +117,7 @@ async def cat(ctx):
                 response = requests.get('https://api.thecatapi.com/v1/images/search')
                 data = response.json()
                 embed = discord.Embed(color=0x363942)
-                embed.set_image(url=f"{data['0']['url']}")
+                embed.set_image(url=f"{data[0]}")
                 await react.edit(embed=embed)
 
 @bot.command()
@@ -328,7 +328,9 @@ async def skin(ctx, username = ""):
         data = uid.json()
         uid = f"{data['id']} "
         embed = discord.Embed(color=0x363942)
-        embed.set_image(url=f"https://minotar.net/body/{uid}/100.png")
+        url = f"https://minotar.net/body/{uid}/100.png"
+        print(url)
+        embed.set_image(url=url)
         await ctx.send(embed=embed)
 
 
