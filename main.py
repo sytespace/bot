@@ -570,9 +570,6 @@ async def ping(ctx):
         up = round((st.upload()/1000000), 2)
         host = str(st.host)
         now = datetime.utcnow()
-        old_message = now - ctx.message.timestamp
-        old_delta = old_message.microseconds
-        milsec_old = int(old_delta // 1000)
         bot_ping = round(bot.latency * 1000 / 2)
         embed = discord.Embed(title="Connection Statistics", description="Current Connection Statistics", color=0x363942)
         embed.add_field(name="Ping (st)", value="`%sms`" % ping, inline=False)
