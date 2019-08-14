@@ -102,7 +102,7 @@ async def cat(ctx):
     response = requests.get('https://api.thecatapi.com/v1/images/search')
     data = response.json()
     embed = discord.Embed(color=0x363942)
-    embed.set_image(url=f"{data['url']}")
+    embed.set_image(url=f"{data['0']['url']}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐱')
     while True:
@@ -117,7 +117,7 @@ async def cat(ctx):
                 response = requests.get('https://api.thecatapi.com/v1/images/search')
                 data = response.json()
                 embed = discord.Embed(color=0x363942)
-                embed.set_image(url=f"{data['url']}")
+                embed.set_image(url=f"{data['0']['url']}")
                 await react.edit(embed=embed)
 
 @bot.command()
@@ -329,7 +329,7 @@ async def skin(ctx, username = ""):
         uid = f"{data['id']} "
         embed = discord.Embed(color=0x363942)
         embed.set_image(url=f"https://minotar.net/body/{uid}/100.png")
-        await ctx.say(embed=embed)
+        await ctx.send(embed=embed)
 
 
 @bot.command(pass_context=True)
