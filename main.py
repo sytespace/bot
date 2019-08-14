@@ -323,6 +323,16 @@ async def checkuser(ctx, member : discord.Member = None):
 
 
 @bot.command(pass_context=True)
+async def skin(ctx, username = ""):
+        uid = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{username}")
+        data = uid.json()
+        uid = f"{data['id']} "
+        embed = discord.Embed(color=0x363942)
+        embed.set_image(url=f"https://minotar.net/body/{uid}/100.png")
+        await ctx.say(embed=embed)
+
+
+@bot.command(pass_context=True)
 async def genpw(ctx):
     pw = secrets.token_urlsafe(5)
     await ctx.author.send(ctx.message.author, f"Your generated password is `{pw}`, this password is secure and hasn't been shared with anybody else")
