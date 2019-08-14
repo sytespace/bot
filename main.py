@@ -189,7 +189,7 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
     if amount == None:
         await ctx.send(":x: Please specify an amount")
     else:
-        embed = discord.Embed(title=f"What aspect of {ctx.author.display_name}'s stats do you wish to change?'", description="React with 📕 to change XP and 📙 to change Sytes and 📗 to toggle booster", color=0x363942)
+        embed = discord.Embed(title=f"What aspect of {member.display_name}'s stats do you wish to change?'", description="React with 📕 to change XP and 📙 to change Sytes and 📗 to toggle booster", color=0x363942)
         wchange = await ctx.send(embed=embed)
         await wchange.add_reaction('📕')
         await wchange.add_reaction('📙')
@@ -206,8 +206,8 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
             if reaction.message.id == wchange.id and user.bot is not True:
                 if str(reaction.emoji) in redbook:
                     await reaction.message.remove_reaction('📕', user)
-                    embed = discord.Embed(title=f"What sort of change do you wish to make to {ctx.author.display_name}'s stats?",
-                                        description=f"React with to ➖ subtract {amount} XP or with ➕ to add {amount} XP to {ctx.author.display_name}'s stats.", color=0x363942)
+                    embed = discord.Embed(title=f"What sort of change do you wish to make to {member.display_name}'s stats?",
+                                        description=f"React with to ➖ subtract {amount} XP or with ➕ to add {amount} XP to {member.display_name}'s stats.", color=0x363942)
                     pmmsg = await ctx.send(embed=embed)
                     await pmmsg.add_reaction('➕')
                     await pmmsg.add_reaction('➖')
@@ -219,14 +219,14 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
                             else:
                                 if str(reaction.emoji) in plusemoji:
                                     add_xp(member.id, amount)
-                                    await ctx.send(f"Added {amount} to {ctx.author.display_name}'s stats")
+                                    await ctx.send(f"Added {amount} to {member.display_name}'s stats")
                                 if str(reaction.emoji) in minusemoji:
                                     remove_xp(member.id, amount)
-                                    await ctx.send(f"Removed {amount} to {ctx.author.display_name}'s stats")
+                                    await ctx.send(f"Removed {amount} to {member.display_name}'s stats")
                 if str(reaction.emoji) in orangebook:
                     await reaction.message.remove_reaction('📙', user)
-                    embed = discord.Embed(title=f"What sort of change do you wish to make to {ctx.author.display_name}'s stats?",
-                                        description=f"React with to ➖ subtract {amount} Sytes with ➕ to add {amount} Sytes to {ctx.author.display_name}'s stats.", color=0x363942)
+                    embed = discord.Embed(title=f"What sort of change do you wish to make to {member.display_name}'s stats?",
+                                        description=f"React with to ➖ subtract {amount} Sytes with ➕ to add {amount} Sytes to {member.display_name}'s stats.", color=0x363942)
                     pmmsg = await ctx.send(embed=embed)
                     await pmmsg.add_reaction('➕')
                     await pmmsg.add_reaction('➖')
@@ -238,19 +238,19 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
                             else:
                                 if str(reaction.emoji) in plusemoji:
                                     add_tk(member.id, amount)
-                                    await ctx.send(f"Added {amount} Sytes to {ctx.author.display_name}'s stats")
+                                    await ctx.send(f"Added {amount} Sytes to {member.display_name}'s stats")
                                 if str(reaction.emoji) in minusemoji:
                                     remove_tk(member.id, amount)
-                                    await ctx.send(f"Removed {amount} Sytes to {ctx.author.display_name}'s stats")
+                                    await ctx.send(f"Removed {amount} Sytes to {member.display_name}'s stats")
                 if str(reaction.emoji) in greenbook:
                     await reaction.message.remove_reaction('📗', user)
                     boost = getbooster(member.id)
                     if boost == False:
                         setbooster(member.id, True)
-                        await ctx.send(f"Set {ctx.author.display_name}'s booster status to True")
+                        await ctx.send(f"Set {member.display_name}'s booster status to True")
                     if boost == True:
                         setbooster(member.id, True)
-                        await ctx.send(f"Set {ctx.author.display_name}'s booster status to False")
+                        await ctx.send(f"Set {member.display_name}'s booster status to False")
 
 @bot.command(pass_context=True)
 async def pfp(ctx, member: discord.Member):
