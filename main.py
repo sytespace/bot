@@ -99,10 +99,10 @@ async def profile(ctx, member: discord.Member = None):
 
 @bot.command()
 async def cat(ctx):
-    response = requests.get('https://some-random-api.ml/img/cat')
+    response = requests.get('https://api.thecatapi.com/v1/images/search')
     data = response.json()
     embed = discord.Embed(color=0x363942)
-    embed.set_image(url=f"{data['link']}")
+    embed.set_image(url=f"{data['url']}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐱')
     while True:
@@ -114,18 +114,18 @@ async def cat(ctx):
             if str(reaction.emoji) in emojis:
                 await reaction.message.remove_reaction('🐱', user)
                 await react.add_reaction('🐱')
-                response = requests.get('https://some-random-api.ml/img/cat')
+                response = requests.get('https://api.thecatapi.com/v1/images/search')
                 data = response.json()
                 embed = discord.Embed(color=0x363942)
-                embed.set_image(url=f"{data['link']}")
+                embed.set_image(url=f"{data['url']}")
                 await react.edit(embed=embed)
 
 @bot.command()
 async def dog(ctx):
-    response = requests.get('https://some-random-api.ml/img/dog')
+    response = requests.get('https://dog.ceo/api/breeds/image/random')
     data = response.json()
     embed = discord.Embed(color=0x363942)
-    embed.set_image(url=f"{data['link']}")
+    embed.set_image(url=f"{data['message']}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐶')
     while True:
@@ -137,10 +137,10 @@ async def dog(ctx):
             if str(reaction.emoji) in dogemojis:
                 await reaction.message.remove_reaction('🐶', user)
                 await react.add_reaction('🐶')
-                response = requests.get('https://some-random-api.ml/img/dog')
+                response = requests.get('https://dog.ceo/api/breeds/image/random')
                 data = response.json()
                 embed = discord.Embed(color=0x363942)
-                embed.set_image(url=f"{data['link']}")
+                embed.set_image(url=f"{data['message']}")
                 await react.edit(embed=embed)
 
 
