@@ -184,6 +184,7 @@ async def uptime(ctx):
 @bot.command()
 @commands.has_role(610879504994271368)
 async def statmod(ctx, member: discord.Member = None, amount: int = None):
+    # ✅
     if member == None:
         await ctx.send(":x: Please specify a member")
     if amount == None:
@@ -219,10 +220,10 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
                             else:
                                 if str(reaction.emoji) in plusemoji:
                                     add_xp(member.id, amount)
-                                    await ctx.send(f"Added {amount} to {member.display_name}'s stats")
+                                    await ctx.send(f"✅ Added {amount} to {member.display_name}'s stats")
                                 if str(reaction.emoji) in minusemoji:
                                     remove_xp(member.id, amount)
-                                    await ctx.send(f"Removed {amount} to {member.display_name}'s stats")
+                                    await ctx.send(f"✅ Removed {amount} to {member.display_name}'s stats")
                 if str(reaction.emoji) in orangebook:
                     await reaction.message.remove_reaction('📙', user)
                     embed = discord.Embed(title=f"What sort of change do you wish to make to {member.display_name}'s stats?",
@@ -238,19 +239,19 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
                             else:
                                 if str(reaction.emoji) in plusemoji:
                                     add_tk(member.id, amount)
-                                    await ctx.send(f"Added {amount} Sytes to {member.display_name}'s stats")
+                                    await ctx.send(f"✅ Added {amount} Sytes to {member.display_name}'s stats")
                                 if str(reaction.emoji) in minusemoji:
                                     remove_tk(member.id, amount)
-                                    await ctx.send(f"Removed {amount} Sytes to {member.display_name}'s stats")
+                                    await ctx.send(f"✅ Removed {amount} Sytes to {member.display_name}'s stats")
                 if str(reaction.emoji) in greenbook:
                     await reaction.message.remove_reaction('📗', user)
                     boost = getbooster(member.id)
                     if boost == False:
                         setbooster(member.id, True)
-                        await ctx.send(f"Set {member.display_name}'s booster status to True")
+                        await ctx.send(f"✅ Set {member.display_name}'s booster status to True")
                     if boost == True:
                         setbooster(member.id, True)
-                        await ctx.send(f"Set {member.display_name}'s booster status to False")
+                        await ctx.send(f"✅ Set {member.display_name}'s booster status to False")
 
 @bot.command(pass_context=True)
 async def pfp(ctx, member: discord.Member):
