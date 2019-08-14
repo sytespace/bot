@@ -80,9 +80,7 @@ async def profile(ctx, member: discord.Member = None):
         member = ctx.message.author
     create_economypp(member.id)
     checklevelup(member.id)
-    xp = get_xp(member.id)
     tk = get_tk(member.id)
-    lvl = get_lvl(member.id)
     booster = getbooster(member.id)
     #if tk <= 0:
     #set_xp(ctx.message.author.id, 0)
@@ -91,9 +89,7 @@ async def profile(ctx, member: discord.Member = None):
         set_tk(ctx.message.author.id, 0)
         print("SET VALUE TO 0")
     embed = discord.Embed(color=0x363942)
-    embed.add_field(name="XP", value=f"{xp}", inline=False)
     embed.add_field(name="Sytes", value=f"${tk}", inline=False)
-    embed.add_field(name="Level", value=f"{lvl}", inline=False)
     embed.add_field(name="Booster", value=f"{booster}", inline=False)
     embed.add_field(name="Joined server at", value=member.joined_at.__format__(
         '%A, %d. %B %Y @ %H:%M:%S'))
