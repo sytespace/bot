@@ -251,8 +251,6 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
                     if boost == True:
                         setbooster(member.id, True)
                         await ctx.send(f"Set {ctx.author.display_name}'s booster status to False")
-    else:
-        await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
 @bot.command(pass_context=True)
 async def pfp(ctx, member: discord.Member):
