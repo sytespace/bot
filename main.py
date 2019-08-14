@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 import psycopg2
 from itertools import cycle
 from datetime import datetime, date, time, timedelta
-#import pyping
+import pyping
 import pyspeedtest
 import secrets
 
@@ -184,70 +184,73 @@ async def uptime(ctx):
 @bot.command()
 @commands.has_role(610879504994271368)
 async def statmod(ctx, member: discord.Member = None, amount: int = None):
-    member = ctx.author if not member else member
-    embed = discord.Embed(title=f"What aspect of {ctx.author.display_name}'s stats do you wish to change?'",
-                          description="React with 📕 to change XP and 📙 to change Sytes and 📗 to toggle booster", color=0x363942)
-    wchange = await ctx.send(embed=embed)
-    await wchange.add_reaction('📕')
-    await wchange.add_reaction('📙')
-    await wchange.add_reaction('📗')
-    while True:
-        redbook = ['📕']
-        orangebook = ['📙']
-        greenbook = ['📗']
-        plusemoji = ['➕']
-        minusemoji = ['➖']
-        timeout = 120
-        reaction, user = await bot.wait_for('reaction_add')
-        timeout
-        if reaction.message.id == wchange.id and user.bot is not True:
-            if str(reaction.emoji) in redbook:
-                await reaction.message.remove_reaction('📕', user)
-                embed = discord.Embed(title=f"What sort of change do you wish to make to {ctx.author.display_name}'s stats?",
-                                      description=f"React with to ➖ subtract {amount} XP or with ➕ to add {amount} XP to {ctx.author.display_name}'s stats.", color=0x363942)
-                pmmsg = await ctx.send(embed=embed)
-                await pmmsg.add_reaction('➕')
-                await pmmsg.add_reaction('➖')
-                while True:
-                    reaction, user = await bot.wait_for('reaction_add')
-                    if reaction.message.id == pmmsg.id and user.bot is not True:
-                        if user != ctx.message.author:
-                            pass
-                        else:
-                            if str(reaction.emoji) in plusemoji:
-                                add_xp(member.id, amount)
-                                await ctx.send(f"Added {amount} to {ctx.author.display_name}'s stats")
-                            if str(reaction.emoji) in minusemoji:
-                                remove_xp(member.id, amount)
-                                await ctx.send(f"Removed {amount} to {ctx.author.display_name}'s stats")
-            if str(reaction.emoji) in orangebook:
-                await reaction.message.remove_reaction('📙', user)
-                embed = discord.Embed(title=f"What sort of change do you wish to make to {ctx.author.display_name}'s stats?",
-                                      description=f"React with to ➖ subtract {amount} Sytes with ➕ to add {amount} Sytes to {ctx.author.display_name}'s stats.", color=0x363942)
-                pmmsg = await ctx.send(embed=embed)
-                await pmmsg.add_reaction('➕')
-                await pmmsg.add_reaction('➖')
-                while True:
-                    reaction, user = await bot.wait_for('reaction_add')
-                    if reaction.message.id == pmmsg.id and user.bot is not True:
-                        if user != ctx.message.author:
-                            pass
-                        else:
-                            if str(reaction.emoji) in plusemoji:
-                                add_tk(member.id, amount)
-                                await ctx.send(f"Added {amount} Sytes to {ctx.author.display_name}'s stats")
-                            if str(reaction.emoji) in minusemoji:
-                                remove_tk(member.id, amount)
-                                await ctx.send(f"Removed {amount} Sytes to {ctx.author.display_name}'s stats")
-            if str(reaction.emoji) in greenbook:
-                await reaction.message.remove_reaction('📗', user)
-                boost = getbooster(member.id)
-                if boost == False:
-                    setbooster(member.id, True)
-                    await ctx.send(f"Set {ctx.author.display_name}'s booster status to True")
-                if boost == True:
-                    setbooster(member.id, True)
-                    await ctx.send(f"Set {ctx.author.display_name}'s booster status to False")
+    if member = None:
+        await ctx.send(":x: Please specify a member")
+    if amount = None:
+        await ctx.send(":x: Please specify an amount")
+    else:
+        embed = discord.Embed(title=f"What aspect of {ctx.author.display_name}'s stats do you wish to change?'", description="React with 📕 to change XP and 📙 to change Sytes and 📗 to toggle booster", color=0x363942)
+        wchange = await ctx.send(embed=embed)
+        await wchange.add_reaction('📕')
+        await wchange.add_reaction('📙')
+        await wchange.add_reaction('📗')
+        while True:
+            redbook = ['📕']
+            orangebook = ['📙']
+            greenbook = ['📗']
+            plusemoji = ['➕']
+            minusemoji = ['➖']
+            timeout = 120
+            reaction, user = await bot.wait_for('reaction_add')
+            timeout
+            if reaction.message.id == wchange.id and user.bot is not True:
+                if str(reaction.emoji) in redbook:
+                    await reaction.message.remove_reaction('📕', user)
+                    embed = discord.Embed(title=f"What sort of change do you wish to make to {ctx.author.display_name}'s stats?",
+                                        description=f"React with to ➖ subtract {amount} XP or with ➕ to add {amount} XP to {ctx.author.display_name}'s stats.", color=0x363942)
+                    pmmsg = await ctx.send(embed=embed)
+                    await pmmsg.add_reaction('➕')
+                    await pmmsg.add_reaction('➖')
+                    while True:
+                        reaction, user = await bot.wait_for('reaction_add')
+                        if reaction.message.id == pmmsg.id and user.bot is not True:
+                            if user != ctx.message.author:
+                                pass
+                            else:
+                                if str(reaction.emoji) in plusemoji:
+                                    add_xp(member.id, amount)
+                                    await ctx.send(f"Added {amount} to {ctx.author.display_name}'s stats")
+                                if str(reaction.emoji) in minusemoji:
+                                    remove_xp(member.id, amount)
+                                    await ctx.send(f"Removed {amount} to {ctx.author.display_name}'s stats")
+                if str(reaction.emoji) in orangebook:
+                    await reaction.message.remove_reaction('📙', user)
+                    embed = discord.Embed(title=f"What sort of change do you wish to make to {ctx.author.display_name}'s stats?",
+                                        description=f"React with to ➖ subtract {amount} Sytes with ➕ to add {amount} Sytes to {ctx.author.display_name}'s stats.", color=0x363942)
+                    pmmsg = await ctx.send(embed=embed)
+                    await pmmsg.add_reaction('➕')
+                    await pmmsg.add_reaction('➖')
+                    while True:
+                        reaction, user = await bot.wait_for('reaction_add')
+                        if reaction.message.id == pmmsg.id and user.bot is not True:
+                            if user != ctx.message.author:
+                                pass
+                            else:
+                                if str(reaction.emoji) in plusemoji:
+                                    add_tk(member.id, amount)
+                                    await ctx.send(f"Added {amount} Sytes to {ctx.author.display_name}'s stats")
+                                if str(reaction.emoji) in minusemoji:
+                                    remove_tk(member.id, amount)
+                                    await ctx.send(f"Removed {amount} Sytes to {ctx.author.display_name}'s stats")
+                if str(reaction.emoji) in greenbook:
+                    await reaction.message.remove_reaction('📗', user)
+                    boost = getbooster(member.id)
+                    if boost == False:
+                        setbooster(member.id, True)
+                        await ctx.send(f"Set {ctx.author.display_name}'s booster status to True")
+                    if boost == True:
+                        setbooster(member.id, True)
+                        await ctx.send(f"Set {ctx.author.display_name}'s booster status to False")
     else:
         await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
@@ -555,34 +558,34 @@ async def weekly_reset(ctx):
         reset_weeklymessages(uid)
         print(f"[Activity] Reset weekly for {uid}")
 
-#@bot.command()
-#async def ping(ctx):
-#        st = pyspeedtest.SpeedTest()
-#        google_req = pyping.ping('8.8.8.8')
-#        cloudflare_req = pyping.ping('1.1.1.1')
-#        discord_req = pyping.ping('gateway.discord.gg')
-#        google = str(google_req.avg_rtt)
-#        cloudflare = str(cloudflare_req.avg_rtt)
-#        discord_ping = str(discord_req.avg_rtt)
-#        ping = str(int(round(st.ping(), 0)))
-#        down = round((st.download()/1000000), 2)
-#        up = round((st.upload()/1000000), 2)
-#        host = str(st.host)
-#        now = datetime.utcnow()
-#        old_message = now - ctx.message.timestamp
-#        old_delta = old_message.microseconds
-#        milsec_old = int(old_delta // 1000)
-#        bot_ping = round(bot.latency * 1000 / 2)
-#        embed = discord.Embed(title="Connection Statistics", description="Current Connection Statistics", color=0x363942)
-#        embed.add_field(name="Ping (st)", value="`%sms`" % ping, inline=False)
-#        embed.add_field(name="Ping (heartbeat)", value="`%sms`" % bot_ping, inline=False)
-#        embed.add_field(name="Server Used", value="`%s`" % host, inline=False)
-#        embed.add_field(name="Download", value="`%s mbps`" % down, inline=False)
-#        embed.add_field(name="Upload", value="`%s mbps`" % up, inline=False)
-#        embed.add_field(name="Google", value="`%sms`" % google, inline=False)
-#        embed.add_field(name="Cloudflare", value="`%sms`" % cloudflare, inline=False)
-#        embed.set_footer(text=f"Requested by: {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-#        await ctx.say(embed=embed)
+@bot.command()
+async def ping(ctx):
+        st = pyspeedtest.SpeedTest()
+        google_req = pyping.ping('8.8.8.8')
+        cloudflare_req = pyping.ping('1.1.1.1')
+        discord_req = pyping.ping('gateway.discord.gg')
+        google = str(google_req.avg_rtt)
+        cloudflare = str(cloudflare_req.avg_rtt)
+        discord_ping = str(discord_req.avg_rtt)
+        ping = str(int(round(st.ping(), 0)))
+        down = round((st.download()/1000000), 2)
+        up = round((st.upload()/1000000), 2)
+        host = str(st.host)
+        now = datetime.utcnow()
+        old_message = now - ctx.message.timestamp
+        old_delta = old_message.microseconds
+        milsec_old = int(old_delta // 1000)
+        bot_ping = round(bot.latency * 1000 / 2)
+        embed = discord.Embed(title="Connection Statistics", description="Current Connection Statistics", color=0x363942)
+        embed.add_field(name="Ping (st)", value="`%sms`" % ping, inline=False)
+        embed.add_field(name="Ping (heartbeat)", value="`%sms`" % bot_ping, inline=False)
+        embed.add_field(name="Server Used", value="`%s`" % host, inline=False)
+        embed.add_field(name="Download", value="`%s mbps`" % down, inline=False)
+        embed.add_field(name="Upload", value="`%s mbps`" % up, inline=False)
+        embed.add_field(name="Google", value="`%sms`" % google, inline=False)
+        embed.add_field(name="Cloudflare", value="`%sms`" % cloudflare, inline=False)
+        embed.set_footer(text=f"Requested by: {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
 
 #Functions
 
@@ -777,17 +780,12 @@ def isrisk(creation_date):
 
 async def chng_pr():
     await bot.wait_until_ready()
-
     statuses = ["s!help", "with the fate of the world", "with hosting", "Minecraft", f"with {len(list(bot.get_all_members()))} users"]
     statuses = cycle(statuses)
-
     while not bot.is_closed():
         status = next(statuses)
-
         await bot.change_presence(activity=discord.Game(status), status='idle')
-
         await asyncio.sleep(15)
-
 bot.loop.create_task(chng_pr())
 
 
@@ -879,7 +877,7 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=embed)
     else:
         embed = discord.Embed(title="Welp! Adam must of defined a global variable!",
-                              description=f"{error}",
+                              description=f"`{error}`",
                               colour=0xe73c24)
         await ctx.send(embed=embed)
         raise error
