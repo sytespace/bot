@@ -933,7 +933,7 @@ async def shutdown(ctx):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         embed = discord.Embed(title="Welp! Adam must of defined a global variable!",
-                              description="That command was not found! We suggest you do `s!help` to see all of the commands",
+                              description=f"The command `{ctx.invoked_with}` was not found! We suggest you do `s!help` to see all of the commands",
                               colour=0xe73c24)
         await ctx.send(embed=embed)
     elif isinstance(error, commands.MissingRole):
