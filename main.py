@@ -32,6 +32,7 @@ bot.remove_command('help')  # Removes help, it's as simple as that.
 # Variables
 
 logChannel = 610156083259899904
+welcomeChannel = 610152003666051083
 TOKEN = open("TOKEN.TXT", "r").read() # Where is the token? Oh well...
 url = open("DATABASE.TXT", "r").read()  # Where is the DB url? Oh well...
 
@@ -1022,7 +1023,7 @@ async def on_member_join(member: discord.Member):
         embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=0x363942)
         embed.set_footer(text=f"We now have {member.guild.member_count} members")
         embed.set_thumbnail(url=member.avatar_url)
-        welcome = bot.get_channel(573607051297685551)
+        welcome = bot.get_channel(welcomeChannel)
         welcome_message = await welcome.send(embed=embed)
         await welcome_message.add_reaction('🇭')
         await welcome_message.add_reaction('🇮')
@@ -1043,7 +1044,7 @@ async def on_member_join(member: discord.Member):
         embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=0x363942)
         embed.set_footer(text=f"We now have {member.guild.member_count} members")
         embed.set_thumbnail(url=member.avatar_url)
-        welcome = bot.get_channel(573607051297685551)
+        welcome = bot.get_channel(welcomeChannel)
         welcome_message = await welcome.send(embed=embed)
         await welcome_message.add_reaction('🇭')
         await welcome_message.add_reaction('🇮')
