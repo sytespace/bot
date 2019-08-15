@@ -274,6 +274,13 @@ async def uptime(ctx):
                     value=f"Weeks: **{weeks}**\nDays: **{days}**\nHours: **{hours}**\nMinutes: **{minutes}**\nSeconds: **{seconds}**")
     await ctx.send(embed=embed)
 
+@bot.command()
+@commands.has_role(610879504994271368)
+async def reset_tickets(ctx)
+    setup_ticknumb()
+    await ctx.send("✅ Moderation action completed")
+
+
 
 @bot.command()
 @commands.has_role(610879504994271368)
@@ -880,6 +887,11 @@ def isrisk(creation_date):
         return True
     else:
         return False
+
+def setup_ticknumb():
+    c.execute("UPDATE Tickets SET Number=%s", (1, ))
+    db.commit()
+    return "Robert is an idiot (just like me)"
 
 def get_ticknumb():
     c.execute("SELECT Number FROM Tickets")
