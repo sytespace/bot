@@ -882,7 +882,7 @@ def isrisk(creation_date):
         return False
 
 def get_ticknumb():
-    c.execute("SELECT Number FROM Ticket")
+    c.execute("SELECT Number FROM Tickets")
     ticknumb = int(c.fetchone()[0])
     db.commit()
     return ticknumb
@@ -890,7 +890,7 @@ def get_ticknumb():
 def update_ticknumb():
     current = get_ticknumb()
     new = current + 1
-    c.execute("UPDATE Users SET Number=%s WHERE UserID=%s", (int(new), ))
+    c.execute("UPDATE Tickets SET Number=%s", (int(new), ))
     db.commit()
     return new
 
