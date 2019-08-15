@@ -226,10 +226,10 @@ async def new(ctx, member: discord.Member = None, subject: str = None):
     createchannel = await server.create_text_channel(f"ticket-{numb}")
     embed = discord.Embed(title = f"New ticket created, Regarding {subject}", description = f"Hello {ctx.message.author.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=0x363942)
     embed.set_footer(text=f"Ticket number: {createchannel.id}", icon_url=member.avatar_url)
-    staff = discord.utils.get(ctx.message.author.server.roles, name="🔨 Staff")
-    guest = discord.utils.get(ctx.message.author.server.roles, name="👤 Guest")
-    client = discord.utils.get(ctx.message.author.server.roles, name="❤ Client")
-    everyone = ctx.message.author.server.default_role
+    staff = discord.utils.get(ctx.message.author.guild.roles, name="🔨 Staff")
+    guest = discord.utils.get(ctx.message.author.guild.roles, name="👤 Guest")
+    client = discord.utils.get(ctx.message.author.guild.roles, name="❤ Client")
+    everyone = ctx.message.author.guild.default_role
     disallow = discord.PermissionOverwrite()
     disallow.read_messages = False
     disallow.send_messages = False
@@ -888,7 +888,12 @@ def get_ticknumb():
     db.commit()
     return ticknumb
 
-# def update_ticknumb()
+def update_ticknumb():
+    current = get_ticknumb()
+    new = current + 1
+    c.execute("UPDATE Users SET Number=%s WHERE UserID=%s", (int(new), ))
+    db.commit()
+    return new
 
 
 async def chng_pr():
