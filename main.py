@@ -220,7 +220,7 @@ async def new(ctx, member: discord.Member = None, subject: str = None):
     if subject == None:
         subject = "no subject provided"
     server = ctx.message.guild
-    ticknumb = get_ticknumb()
+    numb = get_ticknumb()
     update_ticknumb()
     createchannel = await server.create_text_channel(f"ticket-{numb}")
     embed = discord.Embed(title = f"New ticket created, Regarding {subject}", description = f"Hello {ctx.message.author.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=0x363942)
