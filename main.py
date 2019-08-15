@@ -175,7 +175,9 @@ async def shibe(ctx):
         await ctx.send(embed=embed)
 
 @bot.command()
-async def new(ctx, member: discord.Member, subject=""):
+async def new(ctx, member: discord.Member = None, subject=""):
+    if member = None:
+        member = ctx.message.author
     ticknumb = 0
     numb = ticknumb + 1
     ticknumb = numb
