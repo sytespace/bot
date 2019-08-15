@@ -102,7 +102,7 @@ async def cat(ctx):
     response = requests.get('https://aws.random.cat/meow')
     data = response.json()
     embed = discord.Embed(color=0x363942)
-    embed.set_image(url=f"{data['file]'}")
+    embed.set_image(url=f"{data['file']}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐱')
     while True:
