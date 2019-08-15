@@ -178,15 +178,16 @@ async def shibe(ctx):
 async def new(ctx, member: discord.Member = None, subject=""):
     if member == None:
         member = ctx.message.author
+    server = ctx.message.guild
     ticknumb = 0
     numb = ticknumb + 1
     ticknumb = numb
-    createchannel = await guild.create_text_channel(f"ticket-{numb}")
+    createchannel = await server.create_text_channel(f"ticket-{numb}")
     embed = discord.Embed(title = f"New ticket created, Regarding {subject}", description = f"Hello {ctx.message.author.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=0x363942)
     embed.set_footer(text=f"Ticket number: {createchannel.id}", icon_url=member.avatar_url)
-    staff = discord.utils.get(ctx.message.author.server.roles, name="🔨 Staff")
-    guest = discord.utils.get(ctx.message.author.server.roles, name="👤 Guest")
-    client = discord.utils.get(ctx.message.author.server.roles, name="❤ Client")
+    staff = discord.utils.get(ctx.server.roles, name="🔨 Staff")
+    guest = discord.utils.get(ctx.server.roles, name="👤 Guest")
+    client = discord.utils.get(ctx.server.roles, name="❤ Client")
     everyone = ctx.message.author.server.default_role
     disallow = discord.PermissionOverwrite()
     disallow.read_messages = False
