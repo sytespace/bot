@@ -184,7 +184,7 @@ async def shibe(ctx):
                 await reaction.message.remove_reaction('🐕', user)
                 await react.add_reaction('🐕')
                 response = requests.get('http://shibe.online/api/shibes')
-                link = response.json()[0]
+                link = requests.json()[0]
                 embed = discord.Embed(color=0x363942)
                 embed.set_image(url=link)
                 await react.edit(embed=embed)
@@ -206,7 +206,7 @@ async def bird(ctx):
             if str(reaction.emoji) in duckemojis:
                 await reaction.message.remove_reaction('🐦', user)
                 await react.add_reaction('🐦')
-                response = response.get('https://shibe.online/api/birds')
+                response = requests.get('https://shibe.online/api/birds')
                 link = response.json()[0]
                 embed = discord.Embed(color=0x363942)
                 embed.set_image(url=link)
@@ -882,7 +882,13 @@ def isrisk(creation_date):
     else:
         return False
 
-# def get_ticknumb():
+def get_ticknumb():
+    c.execute("SELECT Number FROM Ticket")
+    ticknumb = int(c.fetchone()[0])
+    db.commit()
+    return ticknumb
+
+# def update_ticknumb()
 
 
 async def chng_pr():
