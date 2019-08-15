@@ -33,6 +33,7 @@ bot.remove_command('help')  # Removes help, it's as simple as that.
 
 logChannel = 610156083259899904
 welcomeChannel = 610152003666051083
+embcolor = 0x363942
 TOKEN = open("TOKEN.TXT", "r").read() # Where is the token? Oh well...
 url = open("DATABASE.TXT", "r").read()  # Where is the DB url? Oh well...
 
