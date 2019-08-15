@@ -169,7 +169,7 @@ async def duck(ctx):
 @bot.command()
 async def shibe(ctx):
     response = requests.get('http://shibe.online/api/shibes')
-    link = request.json()[0]
+    link = response.json()[0]
     embed = discord.Embed(color=0x363942)
     embed.set_image(url=link)
     react = await ctx.send(embed=embed)
@@ -184,17 +184,15 @@ async def shibe(ctx):
                 await reaction.message.remove_reaction('🐕', user)
                 await react.add_reaction('🐕')
                 response = requests.get('http://shibe.online/api/shibes')
-                link = request.json()[0]
+                link = response.json()[0]
                 embed = discord.Embed(color=0x363942)
                 embed.set_image(url=link)
                 await react.edit(embed=embed)
 
-# https://shibe.online/api/birds
-
 @bot.command()
 async def bird(ctx):
     response = requests.get('https://shibe.online/api/birds')
-    link = request.json()[0]
+    link = response.json()[0]
     embed = discord.Embed(color=0x363942)
     embed.set_image(url=link)
     react = await ctx.send(embed=embed)
@@ -208,17 +206,19 @@ async def bird(ctx):
             if str(reaction.emoji) in duckemojis:
                 await reaction.message.remove_reaction('🐦', user)
                 await react.add_reaction('🐦')
-                response = requests.get('https://shibe.online/api/birds')
-                link = request.json()[0]
+                response = response.get('https://shibe.online/api/birds')
+                link = response.json()[0]
                 embed = discord.Embed(color=0x363942)
                 embed.set_image(url=link)
                 await react.edit(embed=embed)
 
 
 @bot.command()
-async def new(ctx, member: discord.Member = None, subject=""):
+async def new(ctx, member: discord.Member = None, subject: str = None):
     if member == None:
         member = ctx.message.author
+    if subject == None:
+        subject = "no subject provided"
     server = ctx.message.guild
     ticknumb = 0
     numb = ticknumb + 1
@@ -239,7 +239,6 @@ async def new(ctx, member: discord.Member = None, subject=""):
     await channel.set_permissions(guest, overwrite=disallow)
     await channel.set_permissions(everyone, overwrite=disallow)
     await channel.set_permissions(client, overwrite=disallow)
-    #await bot.edit_channel_permissions(createchannel, everyone, disallow)
     await channel.set_permissions(ctx.message.author, overwrite=allow)
     await channel.set_permissions(staff, overwrite=allow)
     await createchannel.send(embed=embed)
@@ -882,6 +881,9 @@ def isrisk(creation_date):
         return True
     else:
         return False
+
+# def get_ticknumb():
+
 
 async def chng_pr():
     await bot.wait_until_ready()
