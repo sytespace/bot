@@ -895,10 +895,12 @@ def setup_ticknumb():
 
 def get_ticknumb():
     c.execute("SELECT Number FROM Tickets")
-    print("-"*32)
-    print(int(c.fetchone()[0]))
-    print("-"*32)
-    ticknumb = int(c.fetchone()[0])
+    row = c.fetchone()
+    if row is not None: 
+        ticknumb = row[0]
+    else:
+        print("[ERROR] Reverting to 1 as a ticketnumber")
+        ticknumb = 1
     db.commit()
     return ticknumb
 
