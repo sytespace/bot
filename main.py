@@ -90,7 +90,7 @@ async def profile(ctx, member: discord.Member = None):
     if tk <= 0:
         set_tk(ctx.message.author.id, 0)
         print("SET VALUE TO 0")
-    embed = discord.Embed(color=0x363942)
+    embed = discord.Embed(color=embcolor)
     embed.add_field(name="Sytes", value=f"${tk}", inline=False)
     embed.add_field(name="Booster", value=f"{booster}", inline=False)
     embed.add_field(name="Joined server at", value=member.joined_at.__format__(
@@ -103,7 +103,7 @@ async def profile(ctx, member: discord.Member = None):
 async def cat(ctx):
     response = requests.get('https://aws.random.cat/meow')
     data = response.json()
-    embed = discord.Embed(color=0x363942)
+    embed = discord.Embed(color=embcolor)
     embed.set_image(url=f"{data['file']}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐱')
@@ -118,7 +118,7 @@ async def cat(ctx):
                 await react.add_reaction('🐱')
                 response = requests.get('https://aws.random.cat/meow')
                 data = response.json()
-                embed = discord.Embed(color=0x363942)
+                embed = discord.Embed(color=embcolor)
                 embed.set_image(url=f"{data['file']}")
                 await react.edit(embed=embed)
 
@@ -126,7 +126,7 @@ async def cat(ctx):
 async def dog(ctx):
     response = requests.get('https://dog.ceo/api/breeds/image/random')
     data = response.json()
-    embed = discord.Embed(color=0x363942)
+    embed = discord.Embed(color=embcolor)
     embed.set_image(url=f"{data['message']}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐶')
@@ -141,7 +141,7 @@ async def dog(ctx):
                 await react.add_reaction('🐶')
                 response = requests.get('https://dog.ceo/api/breeds/image/random')
                 data = response.json()
-                embed = discord.Embed(color=0x363942)
+                embed = discord.Embed(color=embcolor)
                 embed.set_image(url=f"{data['message']}")
                 await react.edit(embed=embed)
 
@@ -149,7 +149,7 @@ async def dog(ctx):
 async def duck(ctx):
     response = requests.get('https://random-d.uk/api/quack')
     data = response.json()
-    embed = discord.Embed(color=0x363942)
+    embed = discord.Embed(color=embcolor)
     embed.set_image(url=f"{data['url']}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🦆')
@@ -164,7 +164,7 @@ async def duck(ctx):
                 await react.add_reaction('🦆')
                 response = requests.get('https://random-d.uk/api/quack')
                 data = response.json()
-                embed = discord.Embed(color=0x363942)
+                embed = discord.Embed(color=embcolor)
                 embed.set_image(url=f"{data['url']}")
                 await react.edit(embed=embed)
 
@@ -172,7 +172,7 @@ async def duck(ctx):
 async def shibe(ctx):
     response = requests.get('http://shibe.online/api/shibes')
     link = response.json()[0]
-    embed = discord.Embed(color=0x363942)
+    embed = discord.Embed(color=embcolor)
     embed.set_image(url=link)
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐕')
@@ -187,7 +187,7 @@ async def shibe(ctx):
                 await react.add_reaction('🐕')
                 response = requests.get('http://shibe.online/api/shibes')
                 link = response.json()[0]
-                embed = discord.Embed(color=0x363942)
+                embed = discord.Embed(color=embcolor)
                 embed.set_image(url=link)
                 await react.edit(embed=embed)
 
@@ -195,7 +195,7 @@ async def shibe(ctx):
 async def bird(ctx):
     response = requests.get('https://shibe.online/api/birds')
     link = response.json()[0]
-    embed = discord.Embed(color=0x363942)
+    embed = discord.Embed(color=embcolor)
     embed.set_image(url=link)
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐦')
@@ -210,7 +210,7 @@ async def bird(ctx):
                 await react.add_reaction('🐦')
                 response = requests.get('https://shibe.online/api/birds')
                 link = response.json()[0]
-                embed = discord.Embed(color=0x363942)
+                embed = discord.Embed(color=embcolor)
                 embed.set_image(url=link)
                 await react.edit(embed=embed)
 
@@ -223,7 +223,7 @@ async def new(ctx, member: discord.Member = None):
     numb = get_ticknumb()
     update_ticknumb()
     createchannel = await server.create_text_channel(f"ticket-{numb}")
-    embed = discord.Embed(title = f"New ticket created", description = f"Hello {member.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=0x363942)
+    embed = discord.Embed(title = f"New ticket created", description = f"Hello {member.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=embcolor)
     embed.set_footer(text=f"Ticket number: {createchannel.id}", icon_url=member.avatar_url)
     staff = discord.utils.get(ctx.message.author.guild.roles, name="🔨 Staff")
     guest = discord.utils.get(ctx.message.author.guild.roles, name="👤 Guest")
@@ -246,7 +246,7 @@ async def new(ctx, member: discord.Member = None):
 async def close(ctx):
     channel = ctx.message.channel
     # numb = get_ticknumb()
-    embed = discord.Embed(title = "Closing ticket", description = "This ticket will be closed in 60 seconds", color=0x363942)
+    embed = discord.Embed(title = "Closing ticket", description = "This ticket will be closed in 60 seconds", color=embcolor)
     confirmmsg = await ctx.send(embed=embed)
     await asyncio.sleep(60)
     await channel.delete(reason = "Ticket closed")
@@ -258,7 +258,7 @@ async def serverinfo(ctx):
     owner = server.owner
     ownername = owner.display_name
     embed = discord.Embed(
-        title=f"Information On {server.name}", description="", color=0x363942)
+        title=f"Information On {server.name}", description="", color=embcolor)
     embed.add_field(name="Server ID:", value=f"{server.id}", inline=False)
     embed.add_field(name="Server Members:", value=f"{server.member_count}")
     embed.add_field(name="Owner:", value=f"{ownername}", inline=False)
@@ -279,7 +279,7 @@ async def uptime(ctx):
     minutes, seconds = divmod(remainder, 60)
     days, hours = divmod(hours, 24)
     weeks, days = divmod(days, 7)
-    embed = discord.Embed(color=0x363942)
+    embed = discord.Embed(color=embcolor)
     embed.add_field(name="Our bot's uptime :calendar_spiral:",
                     value=f"Weeks: **{weeks}**\nDays: **{days}**\nHours: **{hours}**\nMinutes: **{minutes}**\nSeconds: **{seconds}**")
     await ctx.send(embed=embed)
@@ -301,7 +301,7 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
     if amount == None:
         await ctx.send(":x: Please specify an amount")
     else:
-        embed = discord.Embed(title=f"What aspect of {member.display_name}'s stats do you wish to change?'", description="React with 📕 to change XP and 📙 to change Sytes and 📗 to toggle booster", color=0x363942)
+        embed = discord.Embed(title=f"What aspect of {member.display_name}'s stats do you wish to change?'", description="React with 📕 to change XP and 📙 to change Sytes and 📗 to toggle booster", color=embcolor)
         wchange = await ctx.send(embed=embed)
         await wchange.add_reaction('📕')
         await wchange.add_reaction('📙')
@@ -319,7 +319,7 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
                 if str(reaction.emoji) in redbook:
                     await reaction.message.remove_reaction('📕', user)
                     embed = discord.Embed(title=f"What sort of change do you wish to make to {member.display_name}'s stats?",
-                                        description=f"React with to ➖ subtract {amount} XP or with ➕ to add {amount} XP to {member.display_name}'s stats.", color=0x363942)
+                                        description=f"React with to ➖ subtract {amount} XP or with ➕ to add {amount} XP to {member.display_name}'s stats.", color=embcolor)
                     pmmsg = await ctx.send(embed=embed)
                     await pmmsg.add_reaction('➕')
                     await pmmsg.add_reaction('➖')
@@ -338,7 +338,7 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
                 if str(reaction.emoji) in orangebook:
                     await reaction.message.remove_reaction('📙', user)
                     embed = discord.Embed(title=f"What sort of change do you wish to make to {member.display_name}'s stats?",
-                                        description=f"React with to ➖ subtract {amount} Sytes with ➕ to add {amount} Sytes to {member.display_name}'s stats.", color=0x363942)
+                                        description=f"React with to ➖ subtract {amount} Sytes with ➕ to add {amount} Sytes to {member.display_name}'s stats.", color=embcolor)
                     pmmsg = await ctx.send(embed=embed)
                     await pmmsg.add_reaction('➕')
                     await pmmsg.add_reaction('➖')
@@ -368,7 +368,7 @@ async def statmod(ctx, member: discord.Member = None, amount: int = None):
 async def pfp(ctx, member: discord.Member):
     if member == None:
         member = ctx.message.author
-    embed = discord.Embed(title="The user's profile picture.", color=0x363942)
+    embed = discord.Embed(title="The user's profile picture.", color=embcolor)
     embed.set_image(url=member.avatar_url)
     await ctx.send(embed=embed)
 
@@ -380,7 +380,7 @@ async def purge(ctx, amount: int):
     channel = bot.get_channel(logChannel)
     await ctx.channel.purge(limit=amount)
     embed = discord.Embed(title=f"A message purge has occurred!",
-                            description="Everything is nice and clean now!", color=0x363942)
+                            description="Everything is nice and clean now!", color=embcolor)
     embed.add_field(name=":recycle: Number of messages purged:",
                     value=f"{amount}", inline=False)
     embed.add_field(name=":closed_lock_with_key: Moderator:",
@@ -411,7 +411,7 @@ async def checkuser(ctx, member : discord.Member = None):
 
     roles = [role for role in member.roles]
 
-    embed = discord.Embed(colour=0x363942,
+    embed = discord.Embed(colour=embcolor,
                           timestamp=ctx.message.created_at)
 
     embed.set_author(name=f"User Info - {member}")
@@ -442,7 +442,7 @@ async def skin(ctx, username = ""):
         uid = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{username}")
         data = uid.json()
         uid = f"{data['id']} "
-        embed = discord.Embed(color=0x363942)
+        embed = discord.Embed(color=embcolor)
         final_uid = uid.replace(' ', '')
         url = f"https://minotar.net/body/{final_uid}/100.png"
         print(url)
@@ -465,13 +465,13 @@ async def genpw(ctx):
 @commands.has_role(610879504994271368)
 async def ban(ctx, member: discord.Member, *, reason='No reason provided.'):
     dm = discord.Embed(title="You have been banned from `SyteSpace`!",
-                        description="Details about the ban:", color=0x363942)
+                        description="Details about the ban:", color=embcolor)
     dm.add_field(name=":closed_lock_with_key: Moderator:",
                     value=ctx.message.author.display_name)
     dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
     dm.set_thumbnail(url=member.avatar_url)
     logEmb = discord.Embed(
-        title="Ban Issued!", description="Details about the ban:", color=0x363942)
+        title="Ban Issued!", description="Details about the ban:", color=embcolor)
     logEmb.add_field(name="Moderator:",
                         value=f"{ctx.message.author.display_name}")
     logEmb.add_field(name=":spy: member Banned:",
@@ -490,13 +490,13 @@ async def ban(ctx, member: discord.Member, *, reason='No reason provided.'):
 @commands.has_role(610879504994271368)
 async def kick(ctx, member: discord.Member, *, reason='No reason provided.'):
     dm = discord.Embed(
-        color=0x363942, title="You have been kicked from `SyteSpace`!")
+        color=embcolor, title="You have been kicked from `SyteSpace`!")
     dm.set_thumbnail(url=member.avatar_url)
     dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
     dm.add_field(name="Moderator:",
                     value=ctx.message.author.display_name)
     logEmb = discord.Embed(
-        color=0x363942, title="A kick has been issued")
+        color=embcolor, title="A kick has been issued")
     logEmb.add_field(name=":notepad_spiral: Reason:",
                         value=f"{reason}")
     logEmb.add_field(name="Moderator:",
@@ -522,11 +522,11 @@ async def unban(ctx, *, member):
         if (user.name, user.discriminator) == (member_name, member_discriminator):
             await ctx.guild.unban(user)
             #dm = discord.Embed(
-                #color=0x363942, title="You have been unbanned from `SyteSpace`!")
+                #color=embcolor, title="You have been unbanned from `SyteSpace`!")
             #dm.add_field(name="Moderator:",
                         #value=ctx.message.author.display_name)
             #logEmb = discord.Embed(
-                #color=0x363942, title="An unban has been issued")
+                #color=embcolor, title="An unban has been issued")
             #logEmb.add_field(name="Moderator:",
                             #value=ctx.message.author.display_name)
             #logEmb.add_field(name=":spy: User Unbanned:", value=f"{member.name}")
@@ -546,13 +546,13 @@ async def mute(ctx, member: discord.Member = None, *, reason='No reason provided
         await ctx.send("Please specify a member.")
         return
     dm = discord.Embed(
-        color=0x363942, title="You have been muted in `SyteSpace`!")
+        color=embcolor, title="You have been muted in `SyteSpace`!")
     dm.set_thumbnail(url=member.avatar_url)
     dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
     dm.add_field(name="Moderator:",
                 value=ctx.message.author.display_name)
     logEmb = discord.Embed(
-        color=0x363942, title="A mute has been issued")
+        color=embcolor, title="A mute has been issued")
     logEmb.add_field(name=":notepad_spiral: Reason:",
                     value=f"{reason}")
     logEmb.add_field(name="Moderator:",
@@ -582,13 +582,13 @@ async def unmute(ctx, member: discord.Member = None, *, reason='No reason provid
         await ctx.send("Please specify a member.")
         return
     dm = discord.Embed(
-        color=0x363942, title="You have been unmuted in `SyteSpace`!")
+        color=embcolor, title="You have been unmuted in `SyteSpace`!")
     dm.set_thumbnail(url=member.avatar_url)
     dm.add_field(name=":notepad_spiral: Reason:", value=f"{reason}")
     dm.add_field(name="Moderator:",
                 value=ctx.message.author.display_name)
     logEmb = discord.Embed(
-        color=0x363942, title="An unmute has been issued")
+        color=embcolor, title="An unmute has been issued")
     logEmb.add_field(name=":notepad_spiral: Reason:",
                     value=f"{reason}")
     logEmb.add_field(name="Moderator:",
@@ -607,7 +607,7 @@ async def unmute(ctx, member: discord.Member = None, *, reason='No reason provid
 @bot.command()
 async def help(ctx):
     embed = discord.Embed(title="What Information Do You Require?",
-                          description="React with 💬 for a list of user commands, 💰 for a list of economy commands and 🛑 for a list of moderation commands", color=0x363942)
+                          description="React with 💬 for a list of user commands, 💰 for a list of economy commands and 🛑 for a list of moderation commands", color=embcolor)
     startmsg = await ctx.send(embed=embed)
     await startmsg.add_reaction('💬')
     await startmsg.add_reaction('💰')
@@ -625,7 +625,7 @@ async def help(ctx):
             if str(reaction.emoji) in houseemoji:
                 await reaction.message.remove_reaction('🏠', user)
                 embed = discord.Embed(title="What Information Do You Require?",
-                                      description="React with 💬 for a list of user commands, 💰 for a list of economy commands and 🛑 for a list of moderation commands", color=0x363942)
+                                      description="React with 💬 for a list of user commands, 💰 for a list of economy commands and 🛑 for a list of moderation commands", color=embcolor)
                 await startmsg.edit(embed=embed)
                 await startmsg.add_reaction('❌')
             if str(reaction.emoji) in chatemoji:
@@ -635,7 +635,7 @@ async def help(ctx):
                 with open("textfiles/usercmds.txt", "r") as txtfile:
                     content = txtfile.read()
                     embed = discord.Embed(title="Help - React with 🏠 to return to the main menu",
-                                          description="`[] = Not Required Argument`, `<> = Required Argument`", color=0x363942)
+                                          description="`[] = Not Required Argument`, `<> = Required Argument`", color=embcolor)
                     embed.add_field(name="\u200b", value=f"{content}")
                     embed.set_footer(
                         text=f"Request by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
@@ -648,7 +648,7 @@ async def help(ctx):
                 with open("textfiles/economy.txt", "r") as txtfile:
                     content = txtfile.read()
                     embed = discord.Embed(title="Help - React with 🏠 to return to the main menu",
-                                          description="`[] = Not Required Argument`, `<> = Required Argument`", color=0x363942)
+                                          description="`[] = Not Required Argument`, `<> = Required Argument`", color=embcolor)
                     embed.add_field(name="\u200b", value=f"{content}")
                     embed.set_footer(
                         text=f"Request by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
@@ -661,7 +661,7 @@ async def help(ctx):
                 with open("textfiles/moderation.txt", "r") as txtfile:
                     content = txtfile.read()
                     embed = discord.Embed(title="Help - React with 🏠 to return to the main menu",
-                                          description="`[] = Not Required Argument`, `<> = Required Argument`", color=0x363942)
+                                          description="`[] = Not Required Argument`, `<> = Required Argument`", color=embcolor)
                     embed.add_field(name="\u200b", value=f"{content}")
                     embed.set_footer(
                         text=f"Request by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
@@ -696,7 +696,7 @@ async def ping(ctx):
         host = str(st.host)
         now = datetime.utcnow()
         bot_ping = round(bot.latency * 1000 / 2)
-        embed = discord.Embed(title="Connection Statistics", description="Current Connection Statistics", color=0x363942)
+        embed = discord.Embed(title="Connection Statistics", description="Current Connection Statistics", color=embcolor)
         embed.add_field(name="Ping (st)", value="`%sms`" % ping, inline=False)
         embed.add_field(name="Ping (heartbeat)", value="`%sms`" % bot_ping, inline=False)
         embed.add_field(name="Server Used", value="`%s`" % host, inline=False)
@@ -947,7 +947,7 @@ async def on_message_delete(message):
             content = message.content
             author_name = message.author.display_name
             embed = discord.Embed(
-                title=f"A message has been deleted!", color=0x363942)
+                title=f"A message has been deleted!", color=embcolor)
             embed.add_field(name=":notepad_spiral: Message Content:",
                             value=f"{content}", inline=False)
             embed.add_field(name=":spy: Message Sender:",
@@ -971,7 +971,7 @@ async def on_message_edit(before, after):
             pass
         else:
             embed = discord.Embed(
-                title=f"A message has been edited!", color=0x363942)
+                title=f"A message has been edited!", color=embcolor)
             embed.add_field(name=":notepad_spiral: Before:",
                             value=f"{before_content}", inline=True)
             embed.add_field(name=":notepad_spiral: After:",
@@ -993,7 +993,7 @@ async def on_message_edit(before, after):
 @bot.event
 async def on_member_remove(member: discord.Member):
     channel = bot.get_channel(logChannel)
-    sec = discord.Embed(title=f"A user has left!", color=0x363942)
+    sec = discord.Embed(title=f"A user has left!", color=embcolor)
     sec.add_field(name=":notepad_spiral: User Name:",
                   value=f"{member.display_name}", inline=True)
     sec.add_field(name=":space_invader:  User ID:",
@@ -1021,7 +1021,7 @@ async def on_member_join(member: discord.Member):
         create_user_if_not_exists(member.id)
         guest = discord.utils.get(member.guild.roles, name="👤 Guest")
         await member.add_roles(guest, reason = "Autorole")
-        embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=0x363942)
+        embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=embcolor)
         embed.set_footer(text=f"We now have {member.guild.member_count} members")
         embed.set_thumbnail(url=member.avatar_url)
         welcome = bot.get_channel(welcomeChannel)
@@ -1042,7 +1042,7 @@ async def on_member_join(member: discord.Member):
         create_user_if_not_exists(member.id)
         guest = discord.utils.get(member.guild.roles, name="👤 Guest")
         await member.add_roles(guest, reason = "Autorole")
-        embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=0x363942)
+        embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=embcolor)
         embed.set_footer(text=f"We now have {member.guild.member_count} members")
         embed.set_thumbnail(url=member.avatar_url)
         welcome = bot.get_channel(welcomeChannel)
