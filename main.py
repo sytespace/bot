@@ -99,10 +99,10 @@ async def profile(ctx, member: discord.Member = None):
 
 @bot.command()
 async def cat(ctx):
-    response = requests.get('https://api.thecatapi.com/v1/images/search')
+    response = requests.get('https://aws.random.cat/meow')
     data = response.json()
     embed = discord.Embed(color=0x363942)
-    embed.set_image(url=f"{data['0']['url']}")
+    embed.set_image(url=f"{data['file]'}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐱')
     while True:
@@ -114,10 +114,10 @@ async def cat(ctx):
             if str(reaction.emoji) in emojis:
                 await reaction.message.remove_reaction('🐱', user)
                 await react.add_reaction('🐱')
-                response = requests.get('https://api.thecatapi.com/v1/images/search')
+                response = requests.get('https://aws.random.cat/meow')
                 data = response.json()
                 embed = discord.Embed(color=0x363942)
-                embed.set_image(url=f"{data[0]}")
+                embed.set_image(url=f"{data['file']}")
                 await react.edit(embed=embed)
 
 @bot.command()
@@ -143,6 +143,62 @@ async def dog(ctx):
                 embed.set_image(url=f"{data['message']}")
                 await react.edit(embed=embed)
 
+@bot.command()
+async def duck(ctx):
+    response = requests.get('https://random-d.uk/api/quack')
+    data = response.json()
+    embed = discord.Embed(color=0x363942)
+    embed.set_image(url=f"{data['url']}")
+    react = await ctx.send(embed=embed)
+    await react.add_reaction('🦆')
+    while True:
+        duckemojis = ['🦆']
+        timeout = 120
+        reaction, user = await bot.wait_for('reaction_add')
+        timeout
+        if reaction.message.id == react.id and user.bot is not True:
+            if str(reaction.emoji) in duckemojis:
+                await reaction.message.remove_reaction('🦆', user)
+                await react.add_reaction('🦆')
+                response = requests.get('https://random-d.uk/api/quack')
+                data = response.json()
+                embed = discord.Embed(color=0x363942)
+                embed.set_image(url=f"{data['url']}")
+                await react.edit(embed=embed)
+
+@bot.command()
+async def shibe(ctx):
+        request = requests.get('http://shibe.online/api/shibes')
+        link = request.json()[0]
+        embed = discord.Embed(color=0x363942)
+        embed.set_image(url=link)
+        await ctx.send(embed=embed)
+
+@bot.command()
+async def new(ctx, member: discord.Member, subject=""):
+    ticknumb = 0
+    numb = ticknumb + 1
+    ticknumb = numb
+    createchannel = await guild.create_text_channel(f"ticket-{numb}")
+    embed = discord.Embed(title = f"New ticket created, Regarding {subject}", description = f"Hello {ctx.message.author.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=0x363942)
+    embed.set_footer(text=f"Ticket number: {createchannel.id}", icon_url=member.avatar_url)
+    staff = discord.utils.get(ctx.message.author.server.roles, name="🔨 Staff")
+    guest = discord.utils.get(ctx.message.author.server.roles, name="👤 Guest")
+    client = discord.utils.get(ctx.message.author.server.roles, name="❤ Client")
+    everyone = ctx.message.author.server.default_role
+    disallow = discord.PermissionOverwrite()
+    disallow.read_messages = False
+    disallow.send_messages = False
+    allow = discord.PermissionOverwrite()
+    allow.read_messages = True
+    allow.send_messages = True
+    await channel.set_permissions(guest, overwrite=disallow)
+    await channel.set_permissions(everyone, overwrite=disallow)
+    await channel.set_permissions(client, overwrite=disallow)
+    #await bot.edit_channel_permissions(createchannel, everyone, disallow)
+    await channel.set_permissions(ctx.message.author, overwrite=allow)
+    await channel.set_permissions(staff, overwrite=allow)
+    await createchannel.send(embed=embed)
 
 @bot.command()
 async def serverinfo(ctx):
@@ -328,7 +384,8 @@ async def skin(ctx, username = ""):
         data = uid.json()
         uid = f"{data['id']} "
         embed = discord.Embed(color=0x363942)
-        url = f"https://minotar.net/body/{uid}/100.png"
+        final_uid = uid.replace(' ', '')
+        url = f"https://minotar.net/body/{final_uid}/100.png"
         print(url)
         embed.set_image(url=url)
         await ctx.send(embed=embed)
@@ -879,12 +936,16 @@ async def on_command_error(ctx, error):
                               description="That command was not found! We suggest you do `s!help` to see all of the commands",
                               colour=0xe73c24)
         await ctx.send(embed=embed)
+    elif isinstance(error, commands.MissingRole):
+        embed = discord.Embed(title="Welp! Adam must of defined a global variable!",
+                              description="You don't have permission to execute this command!",
+                              colour=0xe73c24)
+        await ctx.send(embed=embed)
     else:
         embed = discord.Embed(title="Welp! Adam must of defined a global variable!",
                               description=f"`{error}`",
                               colour=0xe73c24)
         await ctx.send(embed=embed)
         raise error
-
 
 bot.run(TOKEN)
