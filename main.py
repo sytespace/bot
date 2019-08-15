@@ -3,6 +3,7 @@ import random
 import asyncio
 import requests
 from discord.ext import commands
+from discord.utils import get
 from urllib.parse import urlparse
 import psycopg2
 from itertools import cycle
@@ -1065,8 +1066,11 @@ async def on_command_error(ctx, error):
                               colour=0xe73c24)
         await ctx.send(embed=embed)
     elif isinstance(error, commands.MissingRole):
+        roleid = error.missing_role
+        roleobj = get(error.guild.roles, id=roleid)
+        rolename = roleobj.name
         embed = discord.Embed(title="Welp! Adam must of defined a global variable!",
-                              description=f"You don't have permission to execute `{ctx.invoked_with}`, this requires the `{str(error.missing_role)}` role to be executed",
+                              description=f"You don't have permission to execute `{ctx.invoked_with}`, this requires the `{rolename}` role to be executed",
                               colour=0xe73c24)
         await ctx.send(embed=embed)
     else:
