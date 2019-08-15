@@ -243,18 +243,11 @@ async def new(ctx, member: discord.Member = None):
 @bot.command(pass_context=True)
 async def close(ctx):
     channel = ctx.message.channel
-    numb = get_ticknumb()
-    embed = discord.Embed(title = "Are you sure you want to delete this ticket?", description = "React with :x: to confirm", color=0x363942)
+    # numb = get_ticknumb()
+    embed = discord.Embed(title = "Closing ticket", description = "This ticket will be closed in 60 seconds", color=0x363942)
     confirmmsg = await ctx.send(embed=embed)
-    await confirmmsg.add_reaction('❌')
-    while True:
-        closeemojis = ['❌']
-        timeout = 120
-        reaction, user = await bot.wait_for('reaction_add')
-        timeout
-    if reaction.message.id == react.id and user.bot is not True:
-        if str(reaction.emoji) in closeemojis:
-            await channel.delete(reason = "Closed ticket")
+    await asyncio.sleep(60)
+    await channel.delete(reason = "Ticket closed")
         
 
 @bot.command()
