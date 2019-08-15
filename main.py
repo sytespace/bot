@@ -276,7 +276,7 @@ async def uptime(ctx):
 
 @bot.command()
 @commands.has_role(610879504994271368)
-async def reset_tickets(ctx)
+async def reset_tickets(ctx):
     setup_ticknumb()
     await ctx.send("✅ Moderation action completed")
 
