@@ -189,6 +189,32 @@ async def shibe(ctx):
                 embed.set_image(url=link)
                 await react.edit(embed=embed)
 
+# https://shibe.online/api/birds
+
+@bot.command()
+async def bird(ctx):
+    response = requests.get('https://shibe.online/api/birds')
+    link = request.json()[0]
+    embed = discord.Embed(color=0x363942)
+    embed.set_image(url=link)
+    react = await ctx.send(embed=embed)
+    await react.add_reaction('🐦')
+    while True:
+        duckemojis = ['🐦']
+        timeout = 120
+        reaction, user = await bot.wait_for('reaction_add')
+        timeout
+        if reaction.message.id == react.id and user.bot is not True:
+            if str(reaction.emoji) in duckemojis:
+                await reaction.message.remove_reaction('🐦', user)
+                await react.add_reaction('🐦')
+                response = requests.get('https://shibe.online/api/birds')
+                link = request.json()[0]
+                embed = discord.Embed(color=0x363942)
+                embed.set_image(url=link)
+                await react.edit(embed=embed)
+
+
 @bot.command()
 async def new(ctx, member: discord.Member = None, subject=""):
     if member == None:
