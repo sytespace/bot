@@ -214,16 +214,14 @@ async def bird(ctx):
 
 
 @bot.command()
-async def new(ctx, member: discord.Member = None, subject: str = None):
+async def new(ctx, member: discord.Member = None):
     if member == None:
         member = ctx.message.author
-    if subject == None:
-        subject = "no subject provided"
     server = ctx.message.guild
     numb = get_ticknumb()
     update_ticknumb()
     createchannel = await server.create_text_channel(f"ticket-{numb}")
-    embed = discord.Embed(title = f"New ticket created, Regarding {subject}", description = f"Hello {ctx.message.author.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=0x363942)
+    embed = discord.Embed(title = f"New ticket created", description = f"Hello {member.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=0x363942)
     embed.set_footer(text=f"Ticket number: {createchannel.id}", icon_url=member.avatar_url)
     staff = discord.utils.get(ctx.message.author.guild.roles, name="🔨 Staff")
     guest = discord.utils.get(ctx.message.author.guild.roles, name="👤 Guest")
@@ -241,6 +239,21 @@ async def new(ctx, member: discord.Member = None, subject: str = None):
     await createchannel.set_permissions(ctx.message.author, overwrite=allow)
     await createchannel.set_permissions(staff, overwrite=allow)
     await createchannel.send(embed=embed)
+
+@bot.command(pass_context=True)
+async def close(ctx):
+    embed = discord.Embed(title = "Are you sure you want to delete this ticket?", description = "React with :x: to confirm", color=0x363942)
+    confirmmsg = await bot.say(embed=embed)
+    await confirmmsg.add_reaction('❌')
+    while True:
+        closeemojis = ['❌']
+        timeout = 120
+        reaction, user = await bot.wait_for('reaction_add')
+        timeout
+    if reaction.message.id == react.id and user.bot is not True:
+        if str(reaction.emoji) in closeemojis:
+            await server.delete_text_channel(ctx.message.channel)
+        
 
 @bot.command()
 async def serverinfo(ctx):
@@ -277,8 +290,8 @@ async def uptime(ctx):
 @bot.command()
 @commands.has_role(610879504994271368)
 async def reset_tickets(ctx):
-    setup_ticknumb()
-    await ctx.send("✅ Moderation action completed")
+    var = setup_ticknumb()
+    await ctx.send(f"✅ Moderation action completed ({var})")
 
 
 
@@ -888,11 +901,6 @@ def isrisk(creation_date):
     else:
         return False
 
-def setup_ticknumb():
-    c.execute("UPDATE Tickets SET Number=%s", (1, ))
-    db.commit()
-    return "Robert is an idiot (just like me)"
-
 def get_ticknumb():
     c.execute("SELECT Number FROM Tickets")
     row = c.fetchone()
@@ -903,6 +911,11 @@ def get_ticknumb():
         ticknumb = 1
     db.commit()
     return ticknumb
+
+def setup_ticknumb():
+    c.execute("UPDATE Tickets SET Number=%s", (int(0), ))
+    db.commit()
+    return get_ticknumb()
 
 def update_ticknumb():
     current = get_ticknumb()
