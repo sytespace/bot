@@ -539,7 +539,7 @@ async def unban(ctx, *, member):
 @commands.has_role(610879504994271368)
 async def mute(ctx, member: discord.Member = None, *, reason='No reason provided.'):
     role = discord.utils.get(ctx.guild.roles, name="muted")
-    unrole = discord.utils.get(ctx.guild.roles, name="guest")
+    unrole = discord.utils.get(ctx.guild.roles, name="👤 Guest")
     if not member:
         await ctx.send("Please specify a member.")
         return
@@ -1008,7 +1008,51 @@ async def on_member_remove(member: discord.Member):
 async def shutdown(ctx):
         await ctx.send("I have logged out.")
         await ctx.bot.logout()
-
+        
+@bot.event
+async def on_member_join(member: discord.Member):
+    #Security
+    risky = isrisk(member.created_at)
+    welcome = bot.get_channel(573607051297685551)
+    log = bot.get_channel(logChannel)
+    if risky == True:
+        log = bot.get_channel(logChannel)
+        create_user_if_not_exists(member.id)
+        ecowarrior = discord.utils.get(member.server.roles, name="👤 Guest")
+        await bot.add_roles(member, ecowarrior)
+        embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=0x363942)
+        embed.set_footer(text=f"We now have {member.server.member_count} members")
+        embed.set_thumbnail(url=member.avatar_url)
+        welcome = await welcome.send(embed=embed)
+        await bot.add_reaction(welcome, '🇭')
+        await bot.add_reaction(welcome, '🇮')
+        sec = discord.Embed(title=f"A user has joined! [HIGH RISK]", color=0xff0000)
+        sec.add_field(name=":notepad_spiral: User Name:", value=f"{member.display_name}", inline=True)
+        sec.add_field(name=":space_invader:  User ID:", value=f"{member.id}", inline=False)
+        sec.add_field(name=":robot: Is Bot", value=f"{member.bot}", inline=False)
+        sec.add_field(name=":clock1: Account Creation Datetime (UTC)", value=f"{member.created_at}", inline=False)
+        sec.add_field(name=":rotating_light:", value="HIGH RISK ACCOUNT - STAFF PLEASE MONITOR")
+        sec.set_thumbnail(url=member.avatar_url)
+        await log.send("@here High Risk Account, Please Monitor")
+        await log.send(embed=sec)#log
+    elif risky == False:
+        log = bot.get_channel(logChannel)
+        create_user_if_not_exists(member.id)
+        ecowarrior = discord.utils.get(member.server.roles, name="👤 Guest")
+        await bot.add_roles(member, ecowarrior)
+        embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=0x363942)
+        embed.set_footer(text=f"We now have {member.server.member_count} members")
+        embed.set_thumbnail(url=member.avatar_url)
+        welcome = await welcome.send(embed=embed)
+        await bot.add_reaction(welcome, '🇭')
+        await bot.add_reaction(welcome, '🇮')
+        sec = discord.Embed(title=f"A user has joined!!", color=embcolor)
+        sec.add_field(name=":notepad_spiral: User Name:", value=f"{member.display_name}", inline=True)
+        sec.add_field(name=":space_invader:  User ID:", value=f"{member.id}", inline=False)
+        sec.add_field(name=":robot: Is Bot", value=f"{member.bot}", inline=False)
+        sec.add_field(name=":clock1: Account Creation Datetime (UTC)", value=f"{member.created_at}", inline=False)
+        sec.set_thumbnail(url=member.avatar_url)
+        await log.send(embed=sec)#log
 
 @bot.event
 async def on_command_error(ctx, error):
