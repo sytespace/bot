@@ -184,7 +184,7 @@ async def shibe(ctx):
                 await reaction.message.remove_reaction('🐕', user)
                 await react.add_reaction('🐕')
                 response = requests.get('http://shibe.online/api/shibes')
-                link = requests.json()[0]
+                link = response.json()[0]
                 embed = discord.Embed(color=0x363942)
                 embed.set_image(url=link)
                 await react.edit(embed=embed)
@@ -895,6 +895,9 @@ def setup_ticknumb():
 
 def get_ticknumb():
     c.execute("SELECT Number FROM Tickets")
+    print("-"*32)
+    print(int(c.fetchone()[0]))
+    print("-"*32)
     ticknumb = int(c.fetchone()[0])
     db.commit()
     return ticknumb
