@@ -176,7 +176,7 @@ async def shibe(ctx):
 
 @bot.command()
 async def new(ctx, member: discord.Member = None, subject=""):
-    if member = None:
+    if member == None:
         member = ctx.message.author
     ticknumb = 0
     numb = ticknumb + 1
