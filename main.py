@@ -243,7 +243,7 @@ async def new(ctx, member: discord.Member = None):
 @bot.command(pass_context=True)
 async def close(ctx):
     embed = discord.Embed(title = "Are you sure you want to delete this ticket?", description = "React with :x: to confirm", color=0x363942)
-    confirmmsg = await bot.say(embed=embed)
+    confirmmsg = await ctx.send(embed=embed)
     await confirmmsg.add_reaction('❌')
     while True:
         closeemojis = ['❌']
