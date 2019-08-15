@@ -220,9 +220,8 @@ async def new(ctx, member: discord.Member = None, subject: str = None):
     if subject == None:
         subject = "no subject provided"
     server = ctx.message.guild
-    ticknumb = 0
-    numb = ticknumb + 1
-    ticknumb = numb
+    ticknumb = get_ticknumb()
+    update_ticknumb()
     createchannel = await server.create_text_channel(f"ticket-{numb}")
     embed = discord.Embed(title = f"New ticket created, Regarding {subject}", description = f"Hello {ctx.message.author.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=0x363942)
     embed.set_footer(text=f"Ticket number: {createchannel.id}", icon_url=member.avatar_url)
@@ -236,11 +235,11 @@ async def new(ctx, member: discord.Member = None, subject: str = None):
     allow = discord.PermissionOverwrite()
     allow.read_messages = True
     allow.send_messages = True
-    await channel.set_permissions(guest, overwrite=disallow)
-    await channel.set_permissions(everyone, overwrite=disallow)
-    await channel.set_permissions(client, overwrite=disallow)
-    await channel.set_permissions(ctx.message.author, overwrite=allow)
-    await channel.set_permissions(staff, overwrite=allow)
+    await createchannel.set_permissions(guest, overwrite=disallow)
+    await createchannel.set_permissions(everyone, overwrite=disallow)
+    await createchannel.set_permissions(client, overwrite=disallow)
+    await createchannel.set_permissions(ctx.message.author, overwrite=allow)
+    await createchannel.set_permissions(staff, overwrite=allow)
     await createchannel.send(embed=embed)
 
 @bot.command()
