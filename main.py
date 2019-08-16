@@ -933,6 +933,23 @@ async def chng_pr():
         await asyncio.sleep(15)
 bot.loop.create_task(chng_pr())
 
+async def spamcheck():
+    while 1:
+        spam = dict(spams)
+        for user in spam:
+            msgs = 0
+            pings = 0
+            for msg in spam[user]['msgs']:
+                if datetime.datetime.utcnow() - msg[1] < datetime.timedelta(seconds=2):
+                    msgs += 1
+            for ping in spam[user]['pings']:
+                if datetime.datetime.utcnow() - ping[1] < datetime.timedelta(seconds=2):
+                    pings += 1
+            if msgs >= 4:
+                await muteuser(user, bot.user, "Spamming", spam[user]['msgs'][-1][0])
+            if pings >= 2:
+                await muteuser(user, bot.user, "Ping Spamming", spam[user]['pings'][-1][0])
+        await asyncio.sleep(1)
 
 @bot.event
 async def on_message_delete(message):
@@ -1067,7 +1084,7 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=embed)
     elif isinstance(error, commands.MissingRole):
         roleid = error.missing_role
-        roleobj = get(error.guild.roles, id=roleid)
+        roleobj = get(ctx.guild.roles, id=roleid)
         rolename = roleobj.name
         embed = discord.Embed(title="Welp! Adam must of defined a global variable!",
                               description=f"You don't have permission to execute `{ctx.invoked_with}`, this requires the `{rolename}` role to be executed",
