@@ -971,7 +971,7 @@ async def warnuser(user, warnedby, reason, msg):
 async def urldetection(msg):
     log = bot.get_channel(logChannel)
     urls = re.findall(urlregex, msg.content.lower())
-    api = open("API.TXT", "r").read()
+    api = open("api.txt", "r").read()
     if len(urls) <= 0:
         return False
     if msg.channel == log:
@@ -1018,7 +1018,7 @@ async def on_message_delete(message):
             embed.set_thumbnail(
                 url="http://icons.iconarchive.com/icons/ramotion/custom-mac-os/512/Trash-empty-icon.png")
             # log
-            await log.send(embed=embed)
+            await channel.send(embed=embed)
     except discord.errors.HTTPException:
         pass
 
