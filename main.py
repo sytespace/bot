@@ -952,6 +952,7 @@ async def warnuser(user, warnedby, reason, msg):
         embed = discord.Embed(title = "You have been warned in `SyteSpace`!", description = "Details about the warn:", color =0x363942)
         embed.add_field(name = ":closed_lock_with_key: Moderator:", value = warnedby.display_name)
         embed.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
+        embed.set_footer(text="This action was preformed by the overwatch auto-moderation system, if you belive this is a mistake please contact a member of staff", icon_url="https://images-ext-2.discordapp.net/external/uRBzAE1kdh2IHBCpPtO876DgohZkZDafXCfeH0mKu_s/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/534445908394377226/0dcc56c5fb681d249c94bbd929afbcbc.webp")
         embed.set_thumbnail(url=member.avatar_url)
         await member.send(embed=embed)# DM it!
         emb = discord.Embed(title = "Warn Issued!", description = "Details about the warn:", color =0x363942)
@@ -969,7 +970,7 @@ async def urldetection(msg):
     api = open("API.TXT", "r").read()
     if len(urls) <= 0:
         return False
-    if msg.channel = log:
+    if msg.channel == log:
         pass
         return False
     else:
