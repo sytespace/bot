@@ -1169,5 +1169,5 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=embed)
         raise error
 
-bot.loop.create_task(spamcheck())
+
 bot.run(TOKEN)
