@@ -7,7 +7,7 @@ from discord.utils import get
 from urllib.parse import urlparse
 import psycopg2
 from itertools import cycle
-from datetime import datetime, date, time, timedelta
+from datetime import date, time, timedelta
 import pyping
 import pyspeedtest
 import secrets
@@ -1134,7 +1134,7 @@ async def on_message(message):
     create_economypp(message.author.id)
     create_activity(message.author.id)
     boost = getbooster(message.author.id)
-    urldetection(message)
+    await urldetection(message)
     ping = False
     if len(message.raw_mentions) + len(message.raw_role_mentions) > 0:
         ping = True
