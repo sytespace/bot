@@ -483,6 +483,24 @@ async def ban(ctx, member: discord.Member, *, reason='No reason provided.'):
     await ctx.message.delete()  # Delete The Message
     await ctx.send('✅ Moderation action completed')
 
+
+@bot.command()
+@commands.has_role(566249728732561410)
+async def warn(ctx, member: discord.Member, *, reason='No reason provided.'):
+    embed = discord.Embed(title = "You have been warned in `SyteSpace`!", description = "Details about the warn:", color =0x363942)
+    embed.add_field(name = ":closed_lock_with_key: Moderator:", value = ctx.message.author.display_name)
+    embed.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
+    embed.set_thumbnail(url=member.avatar_url)
+    await member.send(embed=embed)# DM it!
+    emb = discord.Embed(title = "Warn Issued!", description = "Details about the warn:", color =0x363942)
+    emb.add_field(name = "Moderator:", value = f"{ctx.message.author.display_name}")
+    emb.add_field(name = ":spy: member Warned:", value = f"{member.name}")
+    emb.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
+    emb.set_thumbnail(url=member.avatar_url)
+    await log.send(embed=emb)#log it!
+    await ctx.send('✅ Moderation action completed')
+
+
 @bot.command()
 @commands.has_role(566249728732561410)
 async def kick(ctx, member: discord.Member, *, reason='No reason provided.'):
@@ -929,84 +947,48 @@ async def chng_pr():
         await asyncio.sleep(15)
 bot.loop.create_task(chng_pr())
 
-async def muteuser(user, mutedby, reason, msg):
+async def warnuser(user, warnedby, reason, msg):
     try:
-        server = bot.get_server('550944638383554561')
-        userobj = server.get_member(user)
-        if userobj == mutedby:
-            pass
-        else:
-            muted = discord.utils.get(server.roles, name="🤬 Muted")
-            await bot.add_roles(userobj, muted)
-            embed = discord.Embed(title = "You have been muted in `SyteSpace`", description = "Details about your mute:", color =embcolor)
-            embed.add_field(name = ":closed_lock_with_key: Moderator:", value = mutedby.display_name)
-            embed.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
-            embed.set_footer(text="This action was preformed by the overwatch auto-moderation system, if you belive this is a mistake please contact a member of staff", icon_url="https://images-ext-2.discordapp.net/external/uRBzAE1kdh2IHBCpPtO876DgohZkZDafXCfeH0mKu_s/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/534445908394377226/0dcc56c5fb681d249c94bbd929afbcbc.webp")
-            embed.set_thumbnail(url=userobj.avatar_url)
-            emb = discord.Embed(title = "A member has been muted!", description = "Details about the mute:", color =embcolor)
-            emb.add_field(name = ":closed_lock_with_key: Moderator:", value = mutedby.display_name)
-            emb.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
-            emb.add_field(name = ":spy: User Muted:", value = f"{userobj.name}")
-            emb.set_thumbnail(url=userobj.avatar_url)
-            await bot.send_message(userobj, embed=embed)
-            await bot.send_message(embed=emb)
-    except discord.errors.HTTPException:
-        server = bot.get_server('550944638383554561')
-        userobj = server.get_member(user)
-        muted = discord.utils.get(server.roles, name="🤬 Muted")
-        await bot.add_roles(userobj, muted)
-        emb = discord.Embed(title = "A member has been muted!", description = "Details about the mute:", color =embcolor)
-        emb.add_field(name = ":closed_lock_with_key: Moderator:", value = mutedby.display_name)
+        embed = discord.Embed(title = "You have been warned in `SyteSpace`!", description = "Details about the warn:", color =0x363942)
+        embed.add_field(name = ":closed_lock_with_key: Moderator:", value = warnedby.display_name)
+        embed.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
+        embed.set_thumbnail(url=member.avatar_url)
+        await member.send(embed=embed)# DM it!
+        emb = discord.Embed(title = "Warn Issued!", description = "Details about the warn:", color =0x363942)
+        emb.add_field(name = "Moderator:", value = f"{warnedby.display_name}")
+        emb.add_field(name = ":spy: member Warned:", value = f"{member.name}")
         emb.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
-        emb.add_field(name = ":spy: User Muted:", value = f"{userobj.name}")
-        emb.set_thumbnail(url=userobj.avatar_url)
-        await bot.send_message(bot.get_channel('565201713951145994'), embed=emb)
+        emb.set_thumbnail(url=member.avatar_url)
+        await log.send(embed=emb)#log it!
+    except:
+        pass
+
 
 async def urldetection(msg):
     urls = re.findall(urlregex, msg.content.lower())
     api = open("API.TXT", "r").read()
     if len(urls) <= 0:
         return False
-    await msg.delete()
-    await msg.channel.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
-    await bot.get_channel(610156083259899904).send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
-    await addlog("[URLDetection] {} [{}] said a URL: '{}'".format(msg.author, msg.author.id, msg.content))
-    if msg.channel.id == 610156083259899904:
-        await blacklistuser(msg.author, bot.user, "URL In Blocked Channel", msg, True)
-        return
-    if msg.author.id in blockedurls:
-        if len([i for i in blockedurls[msg.author.id] if i + timedelta(hours=1) > datetime.utcnow()]) >= 2:
-            await blacklistuser(msg.author, bot.user, "URL Spam", msg)
-        blockedurls[msg.author.id].append(datetime.utcnow())
-        return
+    if msg.channel = log:
+        pass
+        return False
     else:
-        blockedurls[msg.author.id] = [datetime.utcnow()]
-    for i in set(urls):
-        res = requests.get(f"https://api.builtwith.com/free1/api.json?KEY={api}&LOOKUP={i}")
-        if "adult" in [i['name'] for i in [i[0] for i in [i['categories'] for i in res.json()['groups'] if "categories" in i] if i] if "name" in i]:
-            await blacklistuser(msg.author, bot.user, "Inappropriate Content", msg)
-            return True
+        await msg.delete()
+        await msg.channel.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
+        await bot.get_channel(610156083259899904).send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
+        if msg.author.id in blockedurls:
+            if len([i for i in blockedurls[msg.author.id] if i + timedelta(hours=1) > datetime.utcnow()]) >= 2:
+                await warn(msg.author, "URL Spam", msg)
+            blockedurls[msg.author.id].append(datetime.utcnow())
+            return
+        else:
+            blockedurls[msg.author.id] = [datetime.utcnow()]
+        for i in set(urls):
+            res = requests.get(f"https://api.builtwith.com/free1/api.json?KEY={api}&LOOKUP={i}")
+            if "adult" in [i['name'] for i in [i[0] for i in [i['categories'] for i in res.json()['groups'] if "categories" in i] if i] if "name" in i]:
+                await warn(msg.author, "Inappropriate Content", msg)
+                return True
     return True
-
-async def spamcheck():
-    while 1:
-        spam = dict(spams)
-        for user in spam:
-            msgs = 0
-            pings = 0
-            for msg in spam[user]['msgs']:
-                if datetime.utcnow() - msg[1] < timedelta(seconds=2):
-                    msgs += 1
-            for ping in spam[user]['pings']:
-                if datetime.utcnow() - ping[1] < timedelta(seconds=2):
-                    pings += 1
-            if msgs >= 4:
-                print("SPAM DETECTED")
-                # await muteuser(user, bot.user, "Spamming", spam[user]['msgs'][-1][0])
-            if pings >= 2:
-                print("SPAM DETECTED")
-                # await muteuser(user, bot.user, "Ping Spamming", spam[user]['pings'][-1][0])
-        await asyncio.sleep(1)
 
 @bot.event
 async def on_message_delete(message):

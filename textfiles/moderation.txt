@@ -3,6 +3,7 @@
 × `s!kick <@user> [reason]`
 × `s!ban <@user> [reason]`
 × `s!unban <@user> [reason]`
+× `s!warn <@user> [reason]`
 × `s!mute <@user> <time> [reason]`
 × `s!checkuser <@user>`
 × `s!statmod <@user> <amount>`
