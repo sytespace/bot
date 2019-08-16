@@ -15,7 +15,7 @@ import secrets
 # Define Bot
 
 bot = commands.Bot(command_prefix='s!')
-bot.launch_time = datetime.now()
+# bot.launch_time = datetime.now()
 ongoingpurge = False
 
 
@@ -268,17 +268,17 @@ async def serverinfo(ctx):
     await ctx.send(embed=embed)
 
 
-@bot.command()
-async def uptime(ctx):
-    delta_uptime = datetime.utcnow() - bot.launch_time
-    hours, remainder = divmod(int(delta_uptime.total_seconds()), 3600)
-    minutes, seconds = divmod(remainder, 60)
-    days, hours = divmod(hours, 24)
-    weeks, days = divmod(days, 7)
-    embed = discord.Embed(color=embcolor)
-    embed.add_field(name="Our bot's uptime :calendar_spiral:",
-                    value=f"Weeks: **{weeks}**\nDays: **{days}**\nHours: **{hours}**\nMinutes: **{minutes}**\nSeconds: **{seconds}**")
-    await ctx.send(embed=embed)
+# @bot.command()
+# async def uptime(ctx):
+#     delta_uptime = datetime.utcnow() - bot.launch_time
+#     hours, remainder = divmod(int(delta_uptime.total_seconds()), 3600)
+#     minutes, seconds = divmod(remainder, 60)
+#     days, hours = divmod(hours, 24)
+#     weeks, days = divmod(days, 7)
+#     embed = discord.Embed(color=embcolor)
+#     embed.add_field(name="Our bot's uptime :calendar_spiral:",
+#                     value=f"Weeks: **{weeks}**\nDays: **{days}**\nHours: **{hours}**\nMinutes: **{minutes}**\nSeconds: **{seconds}**")
+#     await ctx.send(embed=embed)
 
 @bot.command()
 @commands.has_role(561266182578110474)
