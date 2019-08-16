@@ -975,12 +975,12 @@ async def urldetection(msg):
         await blacklistuser(msg.author, bot.user, "URL In Blocked Channel", msg, True)
         return
     if msg.author.id in blockedurls:
-        if len([i for i in blockedurls[msg.author.id] if i + datetime.timedelta(hours=1) > datetime.datetime.utcnow()]) >= 2:
+        if len([i for i in blockedurls[msg.author.id] if i + datetime.timedelta(hours=1) > datetime.utcnow()]) >= 2:
             await blacklistuser(msg.author, bot.user, "URL Spam", msg)
-        blockedurls[msg.author.id].append(datetime.datetime.utcnow())
+        blockedurls[msg.author.id].append(datetime.utcnow())
         return
     else:
-        blockedurls[msg.author.id] = [datetime.datetime.utcnow()]
+        blockedurls[msg.author.id] = [datetime.utcnow()]
     for i in set(urls):
         res = requests.get(f"https://api.builtwith.com/free1/api.json?KEY={api}&LOOKUP={i}")
         if "adult" in [i['name'] for i in [i[0] for i in [i['categories'] for i in res.json()['groups'] if "categories" in i] if i] if "name" in i]:
@@ -995,10 +995,10 @@ async def spamcheck():
             msgs = 0
             pings = 0
             for msg in spam[user]['msgs']:
-                if datetime.datetime.utcnow() - msg[1] < datetime.timedelta(seconds=2):
+                if datetime.utcnow() - msg[1] < datetime.timedelta(seconds=2):
                     msgs += 1
             for ping in spam[user]['pings']:
-                if datetime.datetime.utcnow() - ping[1] < datetime.timedelta(seconds=2):
+                if datetime.utcnow() - ping[1] < datetime.timedelta(seconds=2):
                     pings += 1
             if msgs >= 4:
                 print("SPAM DETECTED")
