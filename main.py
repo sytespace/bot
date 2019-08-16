@@ -949,6 +949,7 @@ bot.loop.create_task(chng_pr())
 
 async def warnuser(user, warnedby, reason, msg):
     try:
+        log = bot.get_channel(logChannel)
         embed = discord.Embed(title = "You have been warned in `SyteSpace`!", description = "Details about the warn:", color =0x363942)
         embed.add_field(name = ":closed_lock_with_key: Moderator:", value = warnedby.display_name)
         embed.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
@@ -966,6 +967,7 @@ async def warnuser(user, warnedby, reason, msg):
 
 
 async def urldetection(msg):
+    log = bot.get_channel(logChannel)
     urls = re.findall(urlregex, msg.content.lower())
     api = open("API.TXT", "r").read()
     if len(urls) <= 0:
