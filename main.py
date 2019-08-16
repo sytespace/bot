@@ -975,6 +975,7 @@ async def urldetection(msg):
     if len(urls) <= 0:
         return False
     if msg.channel == log:
+        break
         return False
     else:
         await msg.delete()
