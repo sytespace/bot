@@ -990,9 +990,9 @@ async def urldetection(msg):
         return False
     await msg.delete()
     await msg.channel.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
-    await bot.get_channel(491303340119031828).send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
+    await bot.get_channel(610156083259899904).send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
     await addlog("[URLDetection] {} [{}] said a URL: '{}'".format(msg.author, msg.author.id, msg.content))
-    if msg.channel.id == 493523604395261982:
+    if msg.channel.id == 610156083259899904:
         await blacklistuser(msg.author, bot.user, "URL In Blocked Channel", msg, True)
         return
     if msg.author.id in blockedurls:
