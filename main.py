@@ -37,6 +37,7 @@ welcomeChannel = 610152003666051083
 embcolor = 0x363942
 TOKEN = open("TOKEN.TXT", "r").read() # Where is the token? Oh well...
 url = open("DATABASE.TXT", "r").read()  # Where is the DB url? Oh well...
+spams = {} # Its a dict you idiots...
 
 # Databases
 
@@ -618,6 +619,7 @@ async def help(ctx):
         chatemoji = ['💬']
         moneyemoji = ['💰']
         blockemoji = ['🛑']
+        dogemoji = ['🐶']
         xemoji = ['❌']
         timeout = 120
         reaction, user = await bot.wait_for('reaction_add')
@@ -647,6 +649,19 @@ async def help(ctx):
                 await reaction.message.remove_reaction('💰', user)
                 await startmsg.add_reaction('🏠')
                 with open("textfiles/economy.txt", "r") as txtfile:
+                    content = txtfile.read()
+                    embed = discord.Embed(title="Help - React with 🏠 to return to the main menu",
+                                          description="`[] = Not Required Argument`, `<> = Required Argument`", color=embcolor)
+                    embed.add_field(name="\u200b", value=f"{content}")
+                    embed.set_footer(
+                        text=f"Request by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+                    await startmsg.edit(embed=embed)
+                    await startmsg.add_reaction('❌')
+                    txtfile.close()
+            if str(reaction.emoji) in dogemoji:
+                await reaction.message.remove_reaction('🐶', user)
+                await startmsg.add_reaction('🏠')
+                with open("textfiles/animal.txt", "r") as txtfile:
                     content = txtfile.read()
                     embed = discord.Embed(title="Help - React with 🏠 to return to the main menu",
                                           description="`[] = Not Required Argument`, `<> = Required Argument`", color=embcolor)
@@ -933,6 +948,41 @@ async def chng_pr():
         await asyncio.sleep(15)
 bot.loop.create_task(chng_pr())
 
+async def muteuser(user, mutedby, reason, msg):
+    try:
+        server = bot.get_server('550944638383554561')
+        userobj = server.get_member(user)
+        if userobj == mutedby:
+            pass
+        else:
+            muted = discord.utils.get(server.roles, name="🤬 Muted")
+            await bot.add_roles(userobj, muted)
+            embed = discord.Embed(title = "You have been muted in `SyteSpace`", description = "Details about your mute:", color =embcolor)
+            embed.add_field(name = ":closed_lock_with_key: Moderator:", value = mutedby.display_name)
+            embed.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
+            embed.set_footer(text="This action was preformed by the overwatch auto-moderation system, if you belive this is a mistake please contact a member of staff", icon_url="https://images-ext-2.discordapp.net/external/uRBzAE1kdh2IHBCpPtO876DgohZkZDafXCfeH0mKu_s/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/534445908394377226/0dcc56c5fb681d249c94bbd929afbcbc.webp")
+            embed.set_thumbnail(url=userobj.avatar_url)
+            emb = discord.Embed(title = "A member has been muted!", description = "Details about the mute:", color =embcolor)
+            emb.add_field(name = ":closed_lock_with_key: Moderator:", value = mutedby.display_name)
+            emb.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
+            emb.add_field(name = ":spy: User Muted:", value = f"{userobj.name}")
+            emb.set_thumbnail(url=userobj.avatar_url)
+            await bot.send_message(userobj, embed=embed)
+            await bot.send_message(embed=emb)
+    except discord.errors.HTTPException:
+        server = bot.get_server('550944638383554561')
+        userobj = server.get_member(user)
+        muted = discord.utils.get(server.roles, name="🤬 Muted")
+        await bot.add_roles(userobj, muted)
+        emb = discord.Embed(title = "A member has been muted!", description = "Details about the mute:", color =embcolor)
+        emb.add_field(name = ":closed_lock_with_key: Moderator:", value = mutedby.display_name)
+        emb.add_field(name = ":notepad_spiral: Reason:", value = f"{reason}")
+        emb.add_field(name = ":spy: User Muted:", value = f"{userobj.name}")
+        emb.set_thumbnail(url=userobj.avatar_url)
+        await bot.send_message(bot.get_channel('565201713951145994'), embed=emb)
+
+
+
 async def spamcheck():
     while 1:
         spam = dict(spams)
@@ -1074,6 +1124,41 @@ async def on_member_join(member: discord.Member):
         sec.add_field(name=":clock1: Account Creation Datetime (UTC)", value=f"{member.created_at}", inline=False)
         sec.set_thumbnail(url=member.avatar_url)
         await log.send(embed=sec)#log
+
+@bot.event
+async def on_message(message):
+    create_economypp(message.author.id)
+    create_activity(message.author.id)
+    add_messages(message.author.id)
+    boost = getbooster(message.author.id)
+    ping = False
+    if len(message.raw_mentions) + len(message.raw_role_mentions) > 0:
+        ping = True
+    if message.author.id in spams:
+        if ping:
+            spams[message.author.id]['pings'].append([message, datetime.utcnow()])
+        spams[message.author.id]['msgs'].append([message, datetime.utcnow()])
+    else:
+        if ping:
+            spams[message.author.id] = {"pings": [[message, datetime.utcnow()]], "msgs": [[message, datetime.utcnow()]]}
+        else:
+            spams[message.author.id] = {"pings": [], "msgs": [[message, datetime.utcnow()]]}
+    if boost == True:
+        if_tk_boost = secrets.choice([True, False])
+        if if_tk_boost == True:
+            amount = int(random.randint(1, 5))
+            add_tk(message.author.id, amount)
+        else:
+            pass
+    elif boost == False:
+        if_tk = secrets.choice([True, False, False, False, False])
+        if if_tk == True:
+            add_tk(message.author.id, 1)
+        else:
+            pass
+    await bot.process_commands(message)
+
+
 
 @bot.event
 async def on_command_error(ctx, error):

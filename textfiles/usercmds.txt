@@ -1,12 +1,10 @@
 :unlock: User Commands:
 
-× `s!ping` - Gets the bot's latency
-× `s!skin <minecraft username>` - Renders a minecraft skin
-× `s!new <Subject>` - Opens a new ticket
-× `s!pfp [@user]` - Gets a user's profile picture, if you don't specify a user it will get your profile picture
-× `s!tos` - Gets the bot's Terms Of Service
-× `s!serverinfo` - Gets some info of the server
-× `s!cat` - Gets a cute cat image
-× `s!dog`- Gets a random dog image (can't ensure cuteness)
-× `s!uptime` - Gets the bot's uptime
-× `s!genpw` - Genarates a secure password and DM's it to you
+Ã— `s!ping` - Gets the bot's latency
+Ã— `s!skin <minecraft username>` - Renders a minecraft skin
+Ã— `s!new <Subject>` - Opens a new ticket
+Ã— `s!pfp [@user]` - Gets a user's profile picture, if you don't specify a user it will get your profile picture
+Ã— `s!tos` - Gets the bot's Terms Of Service
+Ã— `s!serverinfo` - Gets some info of the server
+Ã— `s!uptime` - Gets the bot's uptime
+Ã— `s!genpw` - Genarates a secure password and DM's it to you

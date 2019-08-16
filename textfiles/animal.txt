@@ -1,0 +1,9 @@
+:dog: Animal Commands:
+
+** Clicking the reaction gets you a new image **
+
+× `s!dog` - Gets a dog image
+× `s!cat` - Gets a cat image
+× `s!bird` - Gets a bird image
+× `s!shibe` - Gets a shibe image
+× `s!duck` - Gets a duck image
