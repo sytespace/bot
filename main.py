@@ -1018,7 +1018,7 @@ async def on_message_delete(message):
             embed.set_thumbnail(
                 url="http://icons.iconarchive.com/icons/ramotion/custom-mac-os/512/Trash-empty-icon.png")
             # log
-            await channel.send(embed=embed)
+            await log.send(embed=embed)
     except discord.errors.HTTPException:
         pass
 
