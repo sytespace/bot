@@ -7,7 +7,7 @@ from discord.utils import get
 from urllib.parse import urlparse
 import psycopg2
 from itertools import cycle
-from datetime import datetime, date, time, timedelta
+import datetime
 import pyping
 import pyspeedtest
 import secrets
