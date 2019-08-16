@@ -975,7 +975,6 @@ async def urldetection(msg):
     if len(urls) <= 0:
         return False
     if msg.channel == log:
-        pass
         return False
     else:
         await msg.delete()
@@ -983,7 +982,7 @@ async def urldetection(msg):
         await bot.get_channel(610156083259899904).send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
         if msg.author.id in blockedurls:
             if len([i for i in blockedurls[msg.author.id] if i + timedelta(hours=1) > datetime.utcnow()]) >= 2:
-                await warnuser(msg.author, "URL Spam", msg)
+                await warnuser(msg.author, bot.user, "URL Spam", msg)
             blockedurls[msg.author.id].append(datetime.utcnow())
             return
         else:
@@ -991,7 +990,7 @@ async def urldetection(msg):
         for i in set(urls):
             res = requests.get(f"https://api.builtwith.com/free1/api.json?KEY={api}&LOOKUP={i}")
             if "adult" in [i['name'] for i in [i[0] for i in [i['categories'] for i in res.json()['groups'] if "categories" in i] if i] if "name" in i]:
-                await warnuser(msg.author, "Inappropriate Content", msg)
+                await warnuser(msg.author, bot.user, "Inappropriate Content", msg)
                 return True
     return True
 
