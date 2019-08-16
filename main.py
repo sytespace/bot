@@ -63,13 +63,6 @@ c.execute("""CREATE TABLE IF NOT EXISTS Ecopp(
                       UserID BIGSERIAL,
                       Boost BOOLEAN)""")
 
-c.execute("""CREATE TABLE IF NOT EXISTS Activity(
-                      UserID BIGSERIAL,
-                      GlobalMessages INTEGER,
-                      GlobalRank INTEGER,
-                      WeeklyMessages INTEGER,
-                      WeeklyRank INTEGER)""")
-
 c.execute("""CREATE TABLE IF NOT EXISTS Tickets(
                       Number INTEGER)""")
 
@@ -288,7 +281,7 @@ async def uptime(ctx):
     await ctx.send(embed=embed)
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(561266182578110474)
 async def reset_tickets(ctx):
     var = setup_ticknumb()
     await ctx.send(f"✅ Moderation action completed ({var})")
@@ -296,7 +289,7 @@ async def reset_tickets(ctx):
 
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(561266182578110474)
 async def statmod(ctx, member: discord.Member = None, amount: int = None):
     # ✅
     if member == None:
@@ -377,7 +370,7 @@ async def pfp(ctx, member: discord.Member):
 
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(561266182578110474)
 async def purge(ctx, amount: int):
     ongoingpurge = True
     channel = bot.get_channel(logChannel)
@@ -408,7 +401,7 @@ async def purge_error(ctx, error):
 
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(566249728732561410)
 async def checkuser(ctx, member : discord.Member = None):
     member = ctx.author if not member else member
 
@@ -465,7 +458,7 @@ async def genpw(ctx):
 # async def buy(ctx):
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(566249728732561410)
 async def ban(ctx, member: discord.Member, *, reason='No reason provided.'):
     dm = discord.Embed(title="You have been banned from `SyteSpace`!",
                         description="Details about the ban:", color=embcolor)
@@ -490,7 +483,7 @@ async def ban(ctx, member: discord.Member, *, reason='No reason provided.'):
     await ctx.send('✅ Moderation action completed')
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(566249728732561410)
 async def kick(ctx, member: discord.Member, *, reason='No reason provided.'):
     dm = discord.Embed(
         color=embcolor, title="You have been kicked from `SyteSpace`!")
@@ -514,7 +507,7 @@ async def kick(ctx, member: discord.Member, *, reason='No reason provided.'):
     await ctx.send('✅ Moderation action completed')
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(566249728732561410)
 async def unban(ctx, *, member):
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split('#')
@@ -541,7 +534,7 @@ async def unban(ctx, *, member):
             return
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(566249728732561410)
 async def mute(ctx, member: discord.Member = None, *, reason='No reason provided.'):
     role = discord.utils.get(ctx.guild.roles, name="muted")
     unrole = discord.utils.get(ctx.guild.roles, name="👤 Guest")
@@ -577,7 +570,7 @@ async def mute_error(ctx, error):
         await ctx.send("{} :x: You are not allowed to use this command!".format(ctx.message.author.mention))
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(566249728732561410)
 async def unmute(ctx, member: discord.Member = None, *, reason='No reason provided.'):
     role = discord.utils.get(ctx.guild.roles, name="muted")
     unrole = discord.utils.get(ctx.guild.roles, name="guest")
@@ -692,7 +685,7 @@ async def help(ctx):
 
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(561266182578110474)
 async def weekly_reset(ctx):
     for x in ctx.members:
         uid = x.id
@@ -1100,7 +1093,7 @@ async def on_member_remove(member: discord.Member):
     await channel.send(embed=sec)
 
 @bot.command()
-@commands.has_role(610879504994271368)
+@commands.has_role(561266182578110474)
 async def shutdown(ctx):
         await ctx.send("I have logged out.")
         await ctx.bot.logout()
@@ -1155,7 +1148,6 @@ async def on_member_join(member: discord.Member):
 async def on_message(message):
     create_economypp(message.author.id)
     create_activity(message.author.id)
-    add_messages(message.author.id)
     boost = getbooster(message.author.id)
     urldetection(message)
     ping = False
