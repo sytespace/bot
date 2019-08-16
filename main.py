@@ -978,7 +978,7 @@ async def urldetection(msg):
         return False
     else:
         await msg.delete()
-        await msg.channel.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
+        await msg.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
         await bot.get_channel(610156083259899904).send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
         if msg.author.id in blockedurls:
             if len([i for i in blockedurls[msg.author.id] if i + timedelta(hours=1) > datetime.utcnow()]) >= 2:
