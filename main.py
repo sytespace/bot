@@ -11,6 +11,7 @@ import datetime
 import pyping
 import pyspeedtest
 import secrets
+import re
 
 # Define Bot
 
@@ -1000,9 +1001,11 @@ async def spamcheck():
                 if datetime.datetime.utcnow() - ping[1] < datetime.timedelta(seconds=2):
                     pings += 1
             if msgs >= 4:
-                await muteuser(user, bot.user, "Spamming", spam[user]['msgs'][-1][0])
+                print("SPAM DETECTED")
+                # await muteuser(user, bot.user, "Spamming", spam[user]['msgs'][-1][0])
             if pings >= 2:
-                await muteuser(user, bot.user, "Ping Spamming", spam[user]['pings'][-1][0])
+                print("SPAM DETECTED")
+                # await muteuser(user, bot.user, "Ping Spamming", spam[user]['pings'][-1][0])
         await asyncio.sleep(1)
 
 @bot.event
