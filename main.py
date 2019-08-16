@@ -7,7 +7,7 @@ from discord.utils import get
 from urllib.parse import urlparse
 import psycopg2
 from itertools import cycle
-import datetime
+from datetime import datetime, timedelta
 import pyping
 import pyspeedtest
 import secrets
@@ -995,10 +995,10 @@ async def spamcheck():
             msgs = 0
             pings = 0
             for msg in spam[user]['msgs']:
-                if datetime.utcnow() - msg[1] < datetime.timedelta(seconds=2):
+                if datetime.datetime.utcnow() - msg[1] < datetime.timedelta(seconds=2):
                     msgs += 1
             for ping in spam[user]['pings']:
-                if datetime.utcnow() - ping[1] < datetime.timedelta(seconds=2):
+                if datetime.datetime.utcnow() - ping[1] < datetime.timedelta(seconds=2):
                     pings += 1
             if msgs >= 4:
                 print("SPAM DETECTED")
