@@ -1004,7 +1004,7 @@ async def on_message_delete(message):
         elif ongoingpurge == True:
             pass
         else:
-            channel = bot.get_channel(logChannel)
+            log = bot.get_channel(logChannel)
             content = message.content
             author_name = message.author.display_name
             embed = discord.Embed(
