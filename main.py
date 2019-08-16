@@ -38,6 +38,7 @@ embcolor = 0x363942
 TOKEN = open("TOKEN.TXT", "r").read() # Where is the token? Oh well...
 url = open("DATABASE.TXT", "r").read()  # Where is the DB url? Oh well...
 spams = {} # Its a dict you idiots...
+urlregex = r"""(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))"""
 
 # Databases
 
@@ -609,11 +610,12 @@ async def unmute(ctx, member: discord.Member = None, *, reason='No reason provid
 @bot.command()
 async def help(ctx):
     embed = discord.Embed(title="What Information Do You Require?",
-                          description="React with 💬 for a list of user commands, 💰 for a list of economy commands and 🛑 for a list of moderation commands", color=embcolor)
+                          description="React with 💬 for a list of user commands, 💰 for a list of economy commands, 🐶 for a list of animal commands and 🛑 for a list of moderation commands", color=embcolor)
     startmsg = await ctx.send(embed=embed)
     await startmsg.add_reaction('💬')
     await startmsg.add_reaction('💰')
     await startmsg.add_reaction('🛑')
+    await startmsg.add_reaction('🐶')
     while True:
         houseemoji = ['🏠']
         chatemoji = ['💬']
@@ -981,7 +983,31 @@ async def muteuser(user, mutedby, reason, msg):
         emb.set_thumbnail(url=userobj.avatar_url)
         await bot.send_message(bot.get_channel('565201713951145994'), embed=emb)
 
-
+async def urldetection(msg):
+    urls = re.findall(urlregex, msg.content.lower())
+    api = open("API.TXT", "r").read()
+    if len(urls) <= 0:
+        return False
+    await msg.delete()
+    await msg.channel.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
+    await bot.get_channel(491303340119031828).send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
+    await addlog("[URLDetection] {} [{}] said a URL: '{}'".format(msg.author, msg.author.id, msg.content))
+    if msg.channel.id == 493523604395261982:
+        await blacklistuser(msg.author, bot.user, "URL In Blocked Channel", msg, True)
+        return
+    if msg.author.id in blockedurls:
+        if len([i for i in blockedurls[msg.author.id] if i + datetime.timedelta(hours=1) > datetime.datetime.utcnow()]) >= 2:
+            await blacklistuser(msg.author, bot.user, "URL Spam", msg)
+        blockedurls[msg.author.id].append(datetime.datetime.utcnow())
+        return
+    else:
+        blockedurls[msg.author.id] = [datetime.datetime.utcnow()]
+    for i in set(urls):
+        res = requests.get(f"https://api.builtwith.com/free1/api.json?KEY={api}&LOOKUP={i}")
+        if "adult" in [i['name'] for i in [i[0] for i in [i['categories'] for i in res.json()['groups'] if "categories" in i] if i] if "name" in i]:
+            await blacklistuser(msg.author, bot.user, "Inappropriate Content", msg)
+            return True
+    return True
 
 async def spamcheck():
     while 1:
@@ -1131,6 +1157,7 @@ async def on_message(message):
     create_activity(message.author.id)
     add_messages(message.author.id)
     boost = getbooster(message.author.id)
+    urldetection(message)
     ping = False
     if len(message.raw_mentions) + len(message.raw_role_mentions) > 0:
         ping = True
@@ -1182,4 +1209,5 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=embed)
         raise error
 
+bot.loop.create_task(spamcheck())
 bot.run(TOKEN)
