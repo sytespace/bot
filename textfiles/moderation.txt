@@ -1,7 +1,8 @@
 :lock: Moderation Commands:
 
-× `s!punish <@user> <reason>`
-× `s!mute <@user> <time> <reason>`
+× `s!kick <@user> [reason]`
+× `s!ban <@user> [reason]`
+× `s!unban <@user> [reason]`
+× `s!mute <@user> <time> [reason]`
 × `s!checkuser <@user>`
 × `s!statmod <@user> <amount>`
-× `s!sql <command>`

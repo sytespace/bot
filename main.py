@@ -14,7 +14,7 @@ import secrets
 
 # Define Bot
 
-bot = commands.Bot(command_prefix='d!')
+bot = commands.Bot(command_prefix='s!')
 bot.launch_time = datetime.utcnow()
 ongoingpurge = False
 
@@ -32,8 +32,8 @@ bot.remove_command('help')  # Removes help, it's as simple as that.
 
 # Variables
 
-logChannel = 610156083259899904
-welcomeChannel = 610152003666051083
+logChannel = 573607051297685551
+welcomeChannel = 565201713951145994
 embcolor = 0x363942
 TOKEN = open("TOKEN.TXT", "r").read() # Where is the token? Oh well...
 url = open("DATABASE.TXT", "r").read()  # Where is the DB url? Oh well...
@@ -603,16 +603,14 @@ async def unmute(ctx, member: discord.Member = None, *, reason='No reason provid
 @bot.command()
 async def help(ctx):
     embed = discord.Embed(title="What Information Do You Require?",
-                          description="React with 💬 for a list of user commands, 💰 for a list of economy commands, 🐶 for a list of animal commands and 🛑 for a list of moderation commands", color=embcolor)
+                          description="React with 💬 for a list of user commands, 🐶 for a list of animal commands and 🛑 for a list of moderation commands", color=embcolor)
     startmsg = await ctx.send(embed=embed)
     await startmsg.add_reaction('💬')
-    await startmsg.add_reaction('💰')
     await startmsg.add_reaction('🛑')
     await startmsg.add_reaction('🐶')
     while True:
         houseemoji = ['🏠']
         chatemoji = ['💬']
-        moneyemoji = ['💰']
         blockemoji = ['🛑']
         dogemoji = ['🐶']
         xemoji = ['❌']
@@ -623,7 +621,7 @@ async def help(ctx):
             if str(reaction.emoji) in houseemoji:
                 await reaction.message.remove_reaction('🏠', user)
                 embed = discord.Embed(title="What Information Do You Require?",
-                                      description="React with 💬 for a list of user commands, 💰 for a list of economy commands and 🛑 for a list of moderation commands", color=embcolor)
+                                      description="React with 💬 for a list of user commands, 🐶 for a list of animal commands and 🛑 for a list of moderation commands", color=embcolor)
                 await startmsg.edit(embed=embed)
                 await startmsg.add_reaction('❌')
             if str(reaction.emoji) in chatemoji:
@@ -631,19 +629,6 @@ async def help(ctx):
                 await startmsg.add_reaction('🏠')
                 await startmsg.add_reaction('❌')
                 with open("textfiles/usercmds.txt", "r") as txtfile:
-                    content = txtfile.read()
-                    embed = discord.Embed(title="Help - React with 🏠 to return to the main menu",
-                                          description="`[] = Not Required Argument`, `<> = Required Argument`", color=embcolor)
-                    embed.add_field(name="\u200b", value=f"{content}")
-                    embed.set_footer(
-                        text=f"Request by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-                    await startmsg.edit(embed=embed)
-                    await startmsg.add_reaction('❌')
-                    txtfile.close()
-            if str(reaction.emoji) in moneyemoji:
-                await reaction.message.remove_reaction('💰', user)
-                await startmsg.add_reaction('🏠')
-                with open("textfiles/economy.txt", "r") as txtfile:
                     content = txtfile.read()
                     embed = discord.Embed(title="Help - React with 🏠 to return to the main menu",
                                           description="`[] = Not Required Argument`, `<> = Required Argument`", color=embcolor)
