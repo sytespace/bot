@@ -1173,9 +1173,6 @@ async def on_command_error(ctx, error):
                               colour=0xe73c24)
         await ctx.send(embed=embed)
     elif isinstance(error, commands.MissingRole):
-        roleid = error.missing_role
-        roleobj = get(ctx.guild.roles, id=roleid)
-        rolename = roleobj.name
         embed = discord.Embed(title="Welp! Adam must of defined a global variable!",
                               description=f"You don't have permission to execute `{ctx.invoked_with}`, this requires the `{rolename}` role to be executed",
                               colour=0xe73c24)
