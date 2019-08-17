@@ -1120,7 +1120,7 @@ async def on_member_join(member: discord.Member):
 
 @bot.event
 async def on_message(message):
-    if bot.user == msg.author:
+    if bot.user == message.author:
         return
     create_economypp(message.author.id)
     create_activity(message.author.id)
