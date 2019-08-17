@@ -979,7 +979,7 @@ async def urldetection(msg):
     else:
         await msg.delete()
         await msg.channel.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
-        await bot.get_channel(610156083259899904).send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
+        await log.send("{} said a URL in {}:```{}```".format(msg.author.mention, msg.channel.mention, msg.content.lower().replace("`", "")))
         if msg.author.id in blockedurls:
             if len([i for i in blockedurls[msg.author.id] if i + timedelta(hours=1) > datetime.utcnow()]) >= 2:
                 await warnuser(msg.author, bot.user, "URL Spam", msg)
@@ -1120,6 +1120,8 @@ async def on_member_join(member: discord.Member):
 
 @bot.event
 async def on_message(message):
+    if bot.user == msg.author:
+        return
     create_economypp(message.author.id)
     create_activity(message.author.id)
     boost = getbooster(message.author.id)
