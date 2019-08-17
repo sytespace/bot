@@ -404,11 +404,13 @@ async def error(ctx):
     logging.error(f'Vadim Blyat [TEST]')
     await ctx.send("✅ Vadim Blyat")
 
+
 @bot.command()
-@commands.has_permissions(manage_messages=True)
-async def clear(ctx, amount: int):
-    await ctx.channel.purge(limit=amount + 1)
-    await ctx.send(f"{amount} messages got deleted.")
+@commands.has_role(566249728732561410)
+async def logs(ctx):
+    with open('discord.log', 'rb') as fp:
+        await ctx.message.author.send(file=discord.File(fp, 'discord.log'))
+        await ctx.send('✅ Development action completed')
 
 @purge.error
 async def purge_error(ctx, error):
