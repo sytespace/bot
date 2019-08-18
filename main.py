@@ -467,7 +467,10 @@ async def skin(ctx, username = ""):
 @bot.command(pass_context=True)
 async def genpw(ctx):
     pw = secrets.token_urlsafe(5)
-    await ctx.author.send(ctx.message.author, f"Your generated password is `{pw}`, this password is secure and hasn't been shared with anybody else")
+    embed = discord.Embed(title="Password",color=0x3A6053,description="This password is secure and hasn't been shared with anybody else")
+    embed.add_feild(name=f"{pw}", value="")
+    embed.set_footer(text=f"Requested by: {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+    await member.send(embed=embed)
 
 # bot.command()
 # async def shop(ctx):
