@@ -252,12 +252,13 @@ async def new(ctx, member: discord.Member = None):
 
 @bot.command(pass_context=True)
 async def close(ctx):
-    channel = ctx.message.channel
-    # numb = get_ticknumb()
-    embed = discord.Embed(title = "Closing ticket", description = "This ticket will be closed in 60 seconds", color=embcolor)
-    confirmmsg = await ctx.send(embed=embed)
-    await asyncio.sleep(60)
-    await channel.delete(reason = "Ticket closed")
+    # channel = ctx.message.channel
+    # # numb = get_ticknumb()
+    # embed = discord.Embed(title = "Closing ticket", description = "This ticket will be closed in 60 seconds", color=embcolor)
+    # confirmmsg = await ctx.send(embed=embed)
+    # await asyncio.sleep(60)
+    # await channel.delete(reason = "Ticket closed")
+    await ctx.send(":x: Command Disabled by Adminstrators")
         
 
 @bot.command()
