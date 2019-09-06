@@ -231,7 +231,8 @@ async def new(ctx, member: discord.Member = None):
     numb = get_ticknumb()
     update_ticknumb()
     createchannel = await server.create_text_channel(f"ticket-{numb}")
-    embed = discord.Embed(title = f"New ticket created", description = f"Hello {member.display_name}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=embcolor)
+    embed = discord.Embed(title=f"New ticket created",
+                          description=f"Hello {member.mention}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=embcolor)
     embed.set_footer(text=f"Ticket number: {createchannel.id}", icon_url=member.avatar_url)
     staff = discord.utils.get(ctx.message.author.guild.roles, name="🔨 Staff")
     guest = discord.utils.get(ctx.message.author.guild.roles, name="👤 Guest")
@@ -250,15 +251,20 @@ async def new(ctx, member: discord.Member = None):
     await createchannel.set_permissions(staff, overwrite=allow)
     await createchannel.send(embed=embed)
 
-@bot.command(pass_context=True)
+@bot.command()
 async def close(ctx):
-    # channel = ctx.message.channel
-    # # numb = get_ticknumb()
-    # embed = discord.Embed(title = "Closing ticket", description = "This ticket will be closed in 60 seconds", color=embcolor)
-    # confirmmsg = await ctx.send(embed=embed)
-    # await asyncio.sleep(60)
-    # await channel.delete(reason = "Ticket closed")
-    await ctx.send(":x: Command Disabled by Adminstrators")
+    staff = discord.utils.get(ctx.message.author.guild.roles, name="🔨 Staff")
+    if staff in ctx.author.roles:
+        channel = ctx.message.channel
+        numb = get_ticknumb()
+        embed = discord.Embed(
+            title="Closing ticket", description="This ticket will be closed in 60 seconds", color=embcolor)
+        confirmmsg = await ctx.send(embed=embed)
+        await asyncio.sleep(60)
+        await channel.delete(reason="Ticket closed")
+    else:
+        await ctx.send(":x: You do not have permission to do that.")
+        
         
 
 @bot.command()
@@ -470,9 +476,9 @@ async def skin(ctx, username = ""):
 async def genpw(ctx):
     pw = secrets.token_urlsafe(5)
     embed = discord.Embed(title="Password",color=0x3A6053,description="This password is secure and hasn't been shared with anybody else")
-    embed.add_field(name=f"{pw}", value="")
+    embed.add_field(name=f"{pw}", value="(please note that this isn't a password for the panel)")
     embed.set_footer(text=f"Requested by: {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-    await member.send(embed=embed)
+    await ctx.author.send(embed=embed)
 
 # bot.command()
 # async def shop(ctx):
