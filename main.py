@@ -1016,9 +1016,9 @@ async def urldetection(msg):
     if msg.channel == log:
         return False
     if staff in msg.author.roles:
-        pass
+        return False
     if engineer in msg.author.roles:
-        pass
+        return False
     else:
         await msg.delete()
         await msg.channel.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
