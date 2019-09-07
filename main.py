@@ -1006,8 +1006,8 @@ async def warnuser(user, warnedby, reason, msg):
 
 
 async def urldetection(msg):
-    staff = discord.utils.get(message.author.guild.roles, name="🔨 Staff")
-    engineer = discord.utils.get(message.author.guild.roles, name="🛠️ Engineer")
+    staff = discord.utils.get(msg.author.guild.roles, name="🔨 Staff")
+    engineer = discord.utils.get(msg.author.guild.roles, name="🛠️ Engineer")
     log = bot.get_channel(logChannel)
     urls = re.findall(urlregex, msg.content.lower())
     api = open("api.txt", "r").read()
