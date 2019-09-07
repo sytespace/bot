@@ -1006,6 +1006,8 @@ async def warnuser(user, warnedby, reason, msg):
 
 
 async def urldetection(msg):
+    staff = discord.utils.get(message.author.guild.roles, name="🔨 Staff")
+    engineer = discord.utils.get(message.author.guild.roles, name="🛠️ Engineer")
     log = bot.get_channel(logChannel)
     urls = re.findall(urlregex, msg.content.lower())
     api = open("api.txt", "r").read()
@@ -1013,6 +1015,10 @@ async def urldetection(msg):
         return False
     if msg.channel == log:
         return False
+    if staff in msg.author.roles:
+        pass
+    if engineer in msg.author.roles:
+        pass
     else:
         await msg.delete()
         await msg.channel.send("{}, URLs are not allowed!".format(msg.author.mention), delete_after=10)
@@ -1157,19 +1163,12 @@ async def on_member_join(member: discord.Member):
 
 @bot.event
 async def on_message(message):
-    staff = discord.utils.get(message.author.guild.roles, name="🔨 Staff")
-    engineer = discord.utils.get(message.author.guild.roles, name="🛠️ Engineer")
     if bot.user == message.author:
         return
     create_economypp(message.author.id)
     create_activity(message.author.id)
     boost = getbooster(message.author.id)
-    if staff in message.author.roles:
-        pass
-    elif engineer in message.author.roles:
-        pass
-    else:
-        await urldetection(message)
+    await urldetection(message)
     ping = False
     if len(message.raw_mentions) + len(message.raw_role_mentions) > 0:
         ping = True
