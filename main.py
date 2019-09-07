@@ -109,10 +109,10 @@ async def profile(ctx, member: discord.Member = None):
 
 @bot.command()
 async def cat(ctx):
-    response = requests.get('https://aws.random.cat/meow')
+    response = requests.get('https://some-random-api.ml/img/cat')
     data = response.json()
     embed = discord.Embed(color=embcolor)
-    embed.set_image(url=f"{data['file']}")
+    embed.set_image(url=f"{data['link']}")
     react = await ctx.send(embed=embed)
     await react.add_reaction('🐱')
     while True:
@@ -124,10 +124,10 @@ async def cat(ctx):
             if str(reaction.emoji) in emojis:
                 await reaction.message.remove_reaction('🐱', user)
                 await react.add_reaction('🐱')
-                response = requests.get('https://aws.random.cat/meow')
+                response = requests.get('https://some-random-api.ml/img/cat')
                 data = response.json()
                 embed = discord.Embed(color=embcolor)
-                embed.set_image(url=f"{data['file']}")
+                embed.set_image(url=f"{data['link']}")
                 await react.edit(embed=embed)
 
 @bot.command()
