@@ -254,7 +254,16 @@ async def new(ctx, member: discord.Member = None):
 @bot.command()
 async def close(ctx):
     staff = discord.utils.get(ctx.message.author.guild.roles, name="🔨 Staff")
+    engineer = discord.utils.get(ctx.message.author.guild.roles, name="🛠️ Engineer")
     if staff in ctx.author.roles:
+        channel = ctx.message.channel
+        numb = get_ticknumb()
+        embed = discord.Embed(
+            title="Closing ticket", description="This ticket will be closed in 60 seconds", color=embcolor)
+        confirmmsg = await ctx.send(embed=embed)
+        await asyncio.sleep(60)
+        await channel.delete(reason="Ticket closed")
+    if engineer in ctx.author.roles:
         channel = ctx.message.channel
         numb = get_ticknumb()
         embed = discord.Embed(
