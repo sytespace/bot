@@ -8,7 +8,6 @@ from urllib.parse import urlparse
 import psycopg2
 from itertools import cycle
 from datetime import datetime, timedelta
-import pyping
 import pyspeedtest
 import secrets
 import re
