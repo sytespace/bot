@@ -1,7 +1,6 @@
 discord.py
 asyncio
 pyspeedtest
-pyping
 psycopg2
 datetime
 requests

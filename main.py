@@ -737,12 +737,6 @@ async def weekly_reset(ctx):
 @bot.command()
 async def ping(ctx):
         st = pyspeedtest.SpeedTest()
-        google_req = pyping.ping('8.8.8.8')
-        cloudflare_req = pyping.ping('1.1.1.1')
-        discord_req = pyping.ping('gateway.discord.gg')
-        google = str(google_req.avg_rtt)
-        cloudflare = str(cloudflare_req.avg_rtt)
-        discord_ping = str(discord_req.avg_rtt)
         ping = str(int(round(st.ping(), 0)))
         down = round((st.download()/1000000), 2)
         up = round((st.upload()/1000000), 2)
@@ -755,8 +749,6 @@ async def ping(ctx):
         embed.add_field(name="Server Used", value="`%s`" % host, inline=False)
         embed.add_field(name="Download", value="`%s mbps`" % down, inline=False)
         embed.add_field(name="Upload", value="`%s mbps`" % up, inline=False)
-        embed.add_field(name="Google", value="`%sms`" % google, inline=False)
-        embed.add_field(name="Cloudflare", value="`%sms`" % cloudflare, inline=False)
         embed.set_footer(text=f"Requested by: {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
