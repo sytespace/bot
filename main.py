@@ -724,15 +724,6 @@ async def help(ctx):
                 await startmsg.remove_reaction('❌', user)
                 await startmsg.delete()
 
-
-@bot.command()
-@commands.has_role(561266182578110474)
-async def weekly_reset(ctx):
-    for x in ctx.members:
-        uid = x.id
-        reset_weeklymessages(uid)
-        print(f"[Activity] Reset weekly for {uid}")
-
 @bot.command()
 async def ping(ctx):
         st = pyspeedtest.SpeedTest()
@@ -785,16 +776,6 @@ def create_economypp(user_id: str):
     if verif < 1:
         print("[Economy++] Creating user with id " + str(user_id))
         c.execute("INSERT INTO Ecopp VALUES (%s, %s)", (str(user_id), False))
-        db.commit()
-
-
-def create_activity(user_id: str):
-    c.execute("SELECT COUNT(*) FROM Activity WHERE UserID=%s", (str(user_id),))
-    verif = c.fetchone()[0]
-    if verif < 1:
-        print("[Activity] Creating user with id " + str(user_id))
-        c.execute("INSERT INTO Activity VALUES (%s, %s, %s, %s, %s)",
-                  (str(user_id), 0, 0, 0, 0))
         db.commit()
 
 
@@ -879,60 +860,6 @@ def set_tk(user_id, amount: int):
     c.execute("UPDATE Users SET Tokens=%s WHERE UserID=%s", (tk, str(user_id)))
     db.commit()
     return tk
-
-
-def get_globalmessages(user_id: str):
-    create_activity(user_id)
-    c.execute("SELECT GlobalMessages FROM Activity WHERE UserID=%s",
-              (str(user_id),))
-    user_globalmessages = int(c.fetchone()[0])
-    db.commit()
-    return user_globalmessages
-
-
-def get_weeklymessages(user_id: str):
-    create_activity(user_id)
-    c.execute("SELECT WeeklyMessages FROM Activity WHERE UserID=%s",
-              (str(user_id),))
-    user_weeklymessages = int(c.fetchone()[0])
-    db.commit()
-    return user_weeklymessages
-
-
-def reset_weeklymessages(user_id: str):
-    create_activity(user_id)
-    c.execute("UPDATE Activity SET WeeklyMessages=%s WHERE UserID=%s",
-              (0, str(user_id)))
-    db.commit()
-    return True
-
-
-def set_weekly_rank(user_id, rank: int):
-    c.execute("UPDATE Activity SET WeeklyRank=%s WHERE UserID=%s",
-              (rank, str(user_id)))
-    db.commit()
-    return rank
-
-
-def get_user_rank(input_rank: int):
-    c.execute("SELECT UserID FROM Activity WHERE WeeklyRank=%s",
-              (int(input_rank),))
-    rank = int(c.fetchone()[0])
-    db.commit()
-    return rank
-
-
-def add_messages(user_id: str):
-    create_activity(user_id)
-    globalmsg = int(get_globalmessages(user_id) + 1)
-    weeklymsg = int(get_weeklymessages(user_id) + 1)
-    c.execute("UPDATE Activity SET GlobalMessages=%s WHERE UserID=%s",
-              (int(globalmsg), str(user_id)))
-    c.execute("UPDATE Activity SET WeeklyMessages=%s WHERE UserID=%s",
-              (int(weeklymsg), str(user_id)))
-    db.commit()
-    return globalmsg + weeklymsg
-
 
 def isrisk(creation_date):
     inputacc = datetime.utcnow() - creation_date
