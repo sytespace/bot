@@ -1083,7 +1083,7 @@ async def on_message(message):
     if bot.user == message.author:
         return
     create_economypp(message.author.id)
-    create_activity(message.author.id)
+
     boost = getbooster(message.author.id)
     await urldetection(message)
     ping = False
