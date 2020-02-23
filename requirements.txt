@@ -4,3 +4,4 @@ pyspeedtest
 pyping
 psycopg2
 datetime
+requests
