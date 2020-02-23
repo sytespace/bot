@@ -13,6 +13,7 @@ import pyspeedtest
 import secrets
 import re
 import logging
+import os
 
 # Define Bot
 
@@ -35,11 +36,11 @@ bot.remove_command('help')  # Removes help, it's as simple as that.
 
 # Variables
 
-logChannel = 565201713951145994
-welcomeChannel = 573607051297685551
+logChannel = 677611154293522465
+welcomeChannel = 551068777995960361
 embcolor = 0x363942
-TOKEN = open("token.txt", "r").read() # Where is the token? Oh well...
-url = open("database.txt", "r").read()  # Where is the DB url? Oh well...
+token = os.getenv("TOKEN")
+url = os.getenv("DATABASE_URL")
 spams = {} # Its a dict you idiots...
 urlregex = r"""(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|dev|bot|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))"""
 blockedurls = {}
@@ -229,13 +230,11 @@ async def new(ctx, member: discord.Member = None):
     if member == None:
         member = ctx.message.author
     server = ctx.message.guild
-    numb = get_ticknumb()
-    update_ticknumb()
-    createchannel = await server.create_text_channel(f"ticket-{numb}")
+    createchannel = await server.create_text_channel(f"ticket-{member.display_name}")
     embed = discord.Embed(title=f"New ticket created",
                           description=f"Hello {member.mention}, thanks for reaching out to our support team, a member of staff will be with you as soon as possible.", color=embcolor)
     embed.set_footer(text=f"Ticket number: {createchannel.id}", icon_url=member.avatar_url)
-    staff = discord.utils.get(ctx.message.author.guild.roles, name="🔨 Staff")
+    staff = discord.utils.get(ctx.message.author.guild.roles, name="Management")
     guest = discord.utils.get(ctx.message.author.guild.roles, name="👤 Guest")
     client = discord.utils.get(ctx.message.author.guild.roles, name="❤ Client")
     everyone = ctx.message.author.guild.default_role
@@ -254,14 +253,14 @@ async def new(ctx, member: discord.Member = None):
 
 @bot.command()
 async def close(ctx):
-    staff = discord.utils.get(ctx.message.author.guild.roles, name="🔨 Staff")
+    staff = discord.utils.get(ctx.message.author.guild.roles, name="Management")
     engineer = discord.utils.get(ctx.message.author.guild.roles, name="🛠️ Engineer")
     if staff in ctx.author.roles:
         channel = ctx.message.channel
         numb = get_ticknumb()
         embed = discord.Embed(
             title="Closing ticket", description="This ticket will be closed in 60 seconds", color=embcolor)
-        confirmmsg = await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
         await asyncio.sleep(60)
         await channel.delete(reason="Ticket closed")
     if engineer in ctx.author.roles:
@@ -269,7 +268,7 @@ async def close(ctx):
         numb = get_ticknumb()
         embed = discord.Embed(
             title="Closing ticket", description="This ticket will be closed in 60 seconds", color=embcolor)
-        confirmmsg = await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
         await asyncio.sleep(60)
         await channel.delete(reason="Ticket closed")
     else:
@@ -1006,7 +1005,7 @@ async def warnuser(user, warnedby, reason, msg):
 
 
 async def urldetection(msg):
-    staff = discord.utils.get(msg.author.guild.roles, name="🔨 Staff")
+    staff = discord.utils.get(msg.author.guild.roles, name="Management")
     engineer = discord.utils.get(msg.author.guild.roles, name="🛠️ Engineer")
     log = bot.get_channel(logChannel)
     urls = re.findall(urlregex, msg.content.lower())
@@ -1125,7 +1124,7 @@ async def on_member_join(member: discord.Member):
         create_user_if_not_exists(member.id)
         guest = discord.utils.get(member.guild.roles, name="👤 Guest")
         await member.add_roles(guest, reason = "Autorole")
-        embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=embcolor)
+        embed = discord.Embed(title = f"Welcome to the Sytespace discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=embcolor)
         embed.set_footer(text=f"We now have {member.guild.member_count} members")
         embed.set_thumbnail(url=member.avatar_url)
         welcome = bot.get_channel(welcomeChannel)
@@ -1146,7 +1145,7 @@ async def on_member_join(member: discord.Member):
         create_user_if_not_exists(member.id)
         guest = discord.utils.get(member.guild.roles, name="👤 Guest")
         await member.add_roles(guest, reason = "Autorole")
-        embed = discord.Embed(title = f"Welcome to the syte.space discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=embcolor)
+        embed = discord.Embed(title = f"Welcome to the Sytespace discord server, {member.display_name}!", description = "If you wish to aquire a Minecraft server please check out <#550958398410194974> and open a ticket by doing `s!new`", color=embcolor)
         embed.set_footer(text=f"We now have {member.guild.member_count} members")
         embed.set_thumbnail(url=member.avatar_url)
         welcome = bot.get_channel(welcomeChannel)
@@ -1219,4 +1218,4 @@ async def on_command_error(ctx, error):
         raise error
 
 
-bot.run(TOKEN)
+bot.run(token)
