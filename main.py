@@ -928,7 +928,7 @@ async def urldetection(msg):
     log = bot.get_channel(logChannel)
     urls = re.findall(urlregex, msg.content.lower())
     api = "b45dc4ef-04cd-4947-a188-8cd5222d1a3c"
-    if (urls) <= 0:
+    if len(urls) <= 0:
         return False
     if msg.channel == log:
         return False
