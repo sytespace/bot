@@ -766,7 +766,7 @@ def create_user_if_not_exists(user_id: str):
     if user_count < 1:
         print("[Users Table]Creating user with id " + str(user_id))
         c.execute("INSERT INTO Users VALUES (%s, %s, %s, %s, %s, %s)",
-                  (str(user_id), 0, 0, 0, 0, 0))
+                  (str(user_id), 0, 0, 0, 0))
         db.commit()
 
 
@@ -1083,7 +1083,6 @@ async def on_message(message):
     if bot.user == message.author:
         return
     create_economypp(message.author.id)
-
     boost = getbooster(message.author.id)
     await urldetection(message)
     ping = False
