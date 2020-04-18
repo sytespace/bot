@@ -1084,7 +1084,7 @@ async def on_message(message):
         return
     create_economypp(message.author.id)
     boost = getbooster(message.author.id)
-    await urldetection(message)
+    # await urldetection(message)
     ping = False
     if len(message.raw_mentions) + len(message.raw_role_mentions) > 0:
         ping = True
